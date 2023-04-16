@@ -30,5 +30,10 @@ Create a classlib to contain the application.
 dotnet new classlib --name Crimson --framework "net6.0"
 ```
 
+Add required packages from nuget
+```
+dotnet add package Microsoft.Extensions.Hosting --version 7.0.1
+```
+
 
 
