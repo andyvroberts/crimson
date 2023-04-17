@@ -1,4 +1,5 @@
 ﻿using Crimson.Infra.PricesReader;
+using Crimson.Shared;
 
 namespace Crimson
 {
@@ -8,7 +9,7 @@ namespace Crimson
 
         public void Run()
         {
-            var temp = "Andy";
+            var data = _reader.GetPrices(Configuration config, IPricesParser parser);
         }
     }
 }

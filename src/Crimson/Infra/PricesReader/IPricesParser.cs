@@ -4,6 +4,6 @@ namespace Crimson.Infra.PricesReader
 {
     public interface IPricesParser
     {
-        UkLandCsvRecord ConvertCsvLine(string line);
+        PriceRecord? ConvertCsvLine(string line);
     }
 }

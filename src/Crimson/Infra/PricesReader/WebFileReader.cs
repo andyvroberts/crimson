@@ -6,7 +6,7 @@ namespace Crimson.Infra.PricesReader
     {
         private static readonly HttpClient client = new();
         
-        public Task<IEnumerable<UkLandCsvRecord>> GetPricesAsyc(string location)
+        public IEnumerable<PriceRecord> GetPrices(string location)
         {
             throw new NotImplementedException();
         }

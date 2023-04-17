@@ -13,6 +13,7 @@ using var host = Host.CreateDefaultBuilder(args)
     .ConfigureServices((_, services) =>
     {
         services.AddTransient<IPricesReader, LocalFileReader>();
+        services.AddTransient<IPricesParser, PricesParser>();
         services.AddTransient<Configuration>();
         services.AddSingleton<PricesLoader>();
     })

@@ -14,19 +14,35 @@ namespace Crimson.Infra.PricesReader
             _parser = parser;
         }
 
-        public Task<IEnumerable<PriceRecord>> GetPricesAsyc(string location)
+        public IEnumerable<PriceRecord> GetPrices(string location)
         {
-            try
+            var path = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+            var fullPath = Path.Combine(path, _configuration.LocalFileLocation, _configuration.LocalFileName);
+            List<PriceRecord> prices = new();
+
+            using (FileStream fs = File.OpenRead(fullPath))
             {
-                var path = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
-                var fullPath = Path.Combine(path, _configuration.LocalFileLocation, _configuration.LocalFileName);
-            }
-            catch (ArgumentException ex)
-            {
-                throw new ArgumentException($"File path and name configuration not found: {ex.Message}");
+                using (StreamReader reader = new(fs))
+                {
+                    while (reader.Peek() > 0)
+                    {
+                        var line = reader.ReadLine();
+                        if (line != null)
+                        {
+                            var nextPrice = _parser.ConvertCsvLine(line);
+
+                            if (nextPrice != null)
+                            {
+                                prices.Add(nextPrice);
+                            }
+
+                        }
+
+                    }
+                }
             }
 
-            return null;
+            return prices;
         }
     }
 }

@@ -5,28 +5,33 @@ namespace Crimson.Infra.PricesReader
 {
     public class PricesParser : IPricesParser
     {
-        public UkLandCsvRecord ConvertCsvLine(string line)
+        public PriceRecord? ConvertCsvLine(string line)
         {
-            UkLandCsvRecord price = new();
+            PriceRecord price = new();
             var nextLine = Convert(line);
 
             if (line != null)
             {
-                price.Price = nextLine[1];
-                price.PriceDate = nextLine[2].Substring(0, 10);
-                price.Postcode = nextLine[3];
-                price.PropertyType = nextLine[4];
-                price.NewBuild = nextLine[5];
-                price.Duration = nextLine[6];
-                price.Paon = nextLine[7];
-                price.Saon = nextLine[8];
-                price.Street = nextLine[9];
-                price.Locality = nextLine[10];
-                price.Town = nextLine[11];
-                price.District = nextLine[12];
-                price.County = nextLine[13];
+                if (string.IsNullOrEmpty(nextLine[3]))
+                {
+                    return null;
+                }
+                else
+                {
+                    string[] addrParts = {nextLine[7], nextLine[8], nextLine[9]};
+                    price.Postcode = nextLine[3];
+                    price.Address = string.Join(' ', addrParts);
+                    price.Price = nextLine[1];
+                    price.Date = nextLine[2].Substring(0, 10);
+                    price.PropertyType = nextLine[4];
+                    price.NewBuild = nextLine[5];
+                    price.Duration = nextLine[6];
+                    price.Locality = nextLine[10];
+                    price.Town = nextLine[11];
+                    price.District = nextLine[12];
+                    price.County = nextLine[13];
+                }
             }
-
             return price;
         }
 
