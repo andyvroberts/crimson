@@ -6,7 +6,7 @@ namespace Crimson.Infra.PricesReader
     {
         private static readonly HttpClient client = new();
         
-        public IEnumerable<PriceRecord> GetPrices(string location)
+        public IEnumerable<PriceRecord> GetPrices()
         {
             throw new NotImplementedException();
         }

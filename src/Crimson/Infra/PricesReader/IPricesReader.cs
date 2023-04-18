@@ -4,6 +4,6 @@ namespace Crimson.Infra.PricesReader
 {
     public interface IPricesReader
     {
-        IEnumerable<PriceRecord> GetPrices(string location);
+        IEnumerable<PriceRecord> GetPrices();
     }
 }

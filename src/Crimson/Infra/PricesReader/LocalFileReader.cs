@@ -14,7 +14,7 @@ namespace Crimson.Infra.PricesReader
             _parser = parser;
         }
 
-        public IEnumerable<PriceRecord> GetPrices(string location)
+        public IEnumerable<PriceRecord> GetPrices()
         {
             var path = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
             var fullPath = Path.Combine(path, _configuration.LocalFileLocation, _configuration.LocalFileName);

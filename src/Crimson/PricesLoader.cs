@@ -1,15 +1,20 @@
 ﻿using Crimson.Infra.PricesReader;
-using Crimson.Shared;
 
 namespace Crimson
 {
-    internal class PricesLoader
+    public class PricesLoader
     {
-        private readonly IPricesReader? _reader;
+        private readonly IPricesReader _reader;
+
+        public PricesLoader(IPricesReader reader)
+        {
+            _reader = reader;
+        }
 
         public void Run()
         {
-            var data = _reader.GetPrices(Configuration config, IPricesParser parser);
+            var data = _reader.GetPrices();
+            Console.WriteLine($"Found {data.Count()} prices");
         }
     }
 }

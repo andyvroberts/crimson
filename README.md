@@ -35,5 +35,10 @@ Add required packages from nuget
 dotnet add package Microsoft.Extensions.Hosting --version 7.0.1
 ```
 
+In the csproj file, ensure your creating an executable by adding the property group:
+```
+<OutputType>Exe</OutputType>
+```
+
 
 
