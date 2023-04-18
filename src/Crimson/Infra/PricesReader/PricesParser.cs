@@ -8,7 +8,7 @@ namespace Crimson.Infra.PricesReader
         public PriceRecord? ConvertCsvLine(string line)
         {
             PriceRecord price = new();
-            var nextLine = Convert(line);
+            var nextLine = DecodeCsvLine(line);
 
             if (line != null)
             {
@@ -35,7 +35,7 @@ namespace Crimson.Infra.PricesReader
             return price;
         }
 
-        private List<string> Convert(string csvLine)
+        private List<string> DecodeCsvLine(string csvLine)
         {
             List<string> lines = new();
             StringBuilder column = new();

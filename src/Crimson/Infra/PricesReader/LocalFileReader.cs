@@ -5,19 +5,19 @@ namespace Crimson.Infra.PricesReader
 {
     public class LocalFileReader : IPricesReader
     {
-        private readonly Configuration _configuration;
+        private readonly Configuration _config;
         private readonly IPricesParser _parser;
 
         public LocalFileReader(Configuration config, IPricesParser parser)
         {
-            _configuration = config;
+            _config = config;
             _parser = parser;
         }
 
         public IEnumerable<PriceRecord> GetPrices()
         {
             var path = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
-            var fullPath = Path.Combine(path, _configuration.LocalFileLocation, _configuration.LocalFileName);
+            var fullPath = Path.Combine(path, _config.LocalFileLocation, _config.LocalFileName);
             List<PriceRecord> prices = new();
 
             using (FileStream fs = File.OpenRead(fullPath))
