@@ -14,8 +14,10 @@ namespace Crimson.Infra.PricesReader
             _parser = parser;
         }
 
-        public StreamReader ReadDataStream()
+        public IEnumerable<PriceRecord> GetPrices()
         {
+            List<PriceRecord> prices = new();
+
             var path = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
             var fullPath = Path.Combine(path, _config.LocalFileLocation, _config.LocalFileName);
 
@@ -41,7 +43,7 @@ namespace Crimson.Infra.PricesReader
                 }
             }
 
-            return reader
+            return prices;
         }
     }
 }
