@@ -3,6 +3,7 @@ using Microsoft.Extensions.Hosting;
 using Crimson;
 using Crimson.Shared;
 using Crimson.Infra.PricesReader;
+using Crimson.Infra.FileExporter;
 using Crimson.Infra;
 
 // Register the application host for the DI container.
@@ -14,6 +15,7 @@ using var host = Host.CreateDefaultBuilder(args)
     {
         services.AddTransient<IPricesReader, WebFileReader>();
         services.AddTransient<IPricesParser, PricesParser>();
+        services.AddTransient<IPricesWriter, CreateFile>();
         services.AddTransient<Configuration>();
         services.AddSingleton<PricesLoader>();
     })

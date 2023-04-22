@@ -18,9 +18,13 @@ namespace Crimson.Infra.PricesReader
                 }
                 else
                 {
-                    string[] addrParts = {nextLine[7], nextLine[8], nextLine[9]};
+                    StringBuilder address = new();
+                    if (! string.IsNullOrWhiteSpace(nextLine[7])) address.Append(nextLine[7] + ' ');
+                    if (! string.IsNullOrWhiteSpace(nextLine[8])) address.Append(nextLine[8] + ' ');
+                    if (! string.IsNullOrWhiteSpace(nextLine[9])) address.Append(nextLine[9]);
+
                     price.Postcode = nextLine[3];
-                    price.Address = string.Join(' ', addrParts);
+                    price.Address = address.ToString().TrimEnd();
                     price.Price = nextLine[1];
                     price.Date = nextLine[2].Substring(0, 10);
                     price.PropertyType = nextLine[4];

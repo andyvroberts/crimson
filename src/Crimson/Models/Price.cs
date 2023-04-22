@@ -14,6 +14,11 @@ namespace Crimson.Models
         public string? Town { get; set; }
         public string? District { get; set; }
         public string? County { get; set; }
+
+        public override string ToString()
+        {
+            return $"{Postcode}|{Address}|{Price}|{Date}|{Locality}|{Town}|{District}|{County}|{PropertyType}|{Duration}|{NewBuild}";
+        }
     }
 
     public class UkLandCsvRecord
