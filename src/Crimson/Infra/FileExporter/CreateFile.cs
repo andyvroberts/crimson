@@ -7,8 +7,18 @@ namespace Crimson.Infra.FileExporter
     {
         private readonly ICompression _compressor;
         private readonly UnicodeEncoding _coding = new();
-        
-        public MemoryStream pricesDataStream = new(); 
+
+        private MemoryStream pricesData;
+        public MemoryStream PricesData
+        {
+            get { return pricesData; }
+        }
+
+        public CreateFile(ICompression compressor)
+        {
+            _compressor = compressor;
+            pricesData = new();
+        }
 
         public void EncodeToStream(IEnumerable<PriceRecord> prices)
         {
@@ -20,17 +30,28 @@ namespace Crimson.Infra.FileExporter
             {
                 if (pLoop == pCount)
                     line = _coding.GetBytes(pr.ToString());
-                else 
+                else
                     line = _coding.GetBytes(pr.ToString() + Environment.NewLine);
 
-                pricesDataStream.Write(line);
+                pricesData.Write(line);
                 pLoop += 1;
             }
+            Console.WriteLine($"Data size = {pricesData.Length}");
+            pricesData.Position = 0;
         }
 
         public void Compress()
         {
+            _compressor.Compress(pricesData);
 
+            Console.WriteLine($"Compressed data size is {_compressor.CompressedData.Length}");
+
+            _compressor.Dispose();
+        }
+
+        public void Dispose()
+        {
+            pricesData.Dispose();
         }
 
     }

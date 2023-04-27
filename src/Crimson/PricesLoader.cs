@@ -30,20 +30,28 @@ namespace Crimson
                 group p by p.Postcode into pGroup
                 select pGroup;
 
-            int cnt = 0;
+            int cnt = 1;
             UnicodeEncoding _coding = new();
 
             foreach (IGrouping<string, Crimson.Models.PriceRecord> pg in postcodeSet)
             {
-                cnt += 1;
-                var dataStream = _writer.PropertyPrices(pg);
-                if (cnt <= 1000)
+                if (cnt == 1)
                 {
-                    Console.WriteLine($"return count = 1:");
-                    dataStream.Position = 0;
-                    StreamReader _temp = new StreamReader(dataStream); 
-                    var _show = _temp.ReadToEnd();
-                    Console.WriteLine(_show);
+                    _writer.EncodeToStream(pg);
+                    _writer.Compress();
+
+                    //Console.WriteLine($"Size = {_writer.CompressedData.Length}");
+
+                    // if (cnt <= 1000)
+                    // {
+                    //     Console.WriteLine($"return count = 1:");
+                    //     dataStream.Position = 0;
+                    //     StreamReader _temp = new StreamReader(dataStream); 
+                    //     var _show = _temp.ReadToEnd();
+                    //     Console.WriteLine(_show);
+                    // }
+
+                    cnt += 1;
                 }
             }
 
