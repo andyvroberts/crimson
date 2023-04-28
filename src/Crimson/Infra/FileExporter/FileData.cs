@@ -3,9 +3,10 @@ using System.Text;
 
 namespace Crimson.Infra.FileExporter
 {
-    public class CreateFile : IPricesWriter
+    public class FileData : IFileContent
     {
         private readonly ICompression _compressor;
+        private readonly IFileWriter _writer;
         private readonly UnicodeEncoding _coding = new();
 
         private MemoryStream pricesData;
@@ -14,9 +15,10 @@ namespace Crimson.Infra.FileExporter
             get { return pricesData; }
         }
 
-        public CreateFile(ICompression compressor)
+        public FileData(ICompression compressor, IFileWriter writer)
         {
             _compressor = compressor;
+            _writer = writer;
             pricesData = new();
         }
 
@@ -45,12 +47,16 @@ namespace Crimson.Infra.FileExporter
             _compressor.Compress(pricesData);
 
             Console.WriteLine($"Compressed data size is {_compressor.CompressedData.Length}");
+        }
 
-            _compressor.Dispose();
+        public void Write(string fileName)
+        {
+            _writer.SaveFile(_compressor.CompressedData, fileName);
         }
 
         public void Dispose()
         {
+            _compressor.Dispose();
             pricesData.Dispose();
         }
 

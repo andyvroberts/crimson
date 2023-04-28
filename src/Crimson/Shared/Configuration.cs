@@ -6,6 +6,8 @@ namespace Crimson.Shared
     {
         public string LocalFileLocation = "downloads";
         public string LocalFileName = "pp-monthly.csv";
+        
+        public string FileExtension = ".dat.gz";
 
         public string WebFileLocation = "http://prod.publicdata.landregistry.gov.uk.s3-website-eu-west-1.amazonaws.com/pp-monthly-update-new-version.csv";
     }

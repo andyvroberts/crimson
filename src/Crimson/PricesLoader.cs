@@ -8,9 +8,9 @@ namespace Crimson
     public class PricesLoader
     {
         private readonly IPricesReader _reader;
-        private readonly IPricesWriter _writer;
+        private readonly IFileContent _writer;
 
-        public PricesLoader(IPricesReader reader, IPricesWriter writer)
+        public PricesLoader(IPricesReader reader, IFileContent writer)
         {
             _reader = reader;
             _writer = writer;
@@ -35,7 +35,7 @@ namespace Crimson
 
             foreach (IGrouping<string, Crimson.Models.PriceRecord> pg in postcodeSet)
             {
-                if (cnt == 1)
+                if (cnt > 0)
                 {
                     _writer.EncodeToStream(pg);
                     _writer.Compress();
@@ -50,7 +50,8 @@ namespace Crimson
                     //     var _show = _temp.ReadToEnd();
                     //     Console.WriteLine(_show);
                     // }
-
+                    _writer.Write(pg.Key);
+                    _writer.Dispose();
                     cnt += 1;
                 }
             }

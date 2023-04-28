@@ -15,8 +15,9 @@ using var host = Host.CreateDefaultBuilder(args)
     {
         services.AddTransient<IPricesReader, WebFileReader>();
         services.AddTransient<IPricesParser, PricesParser>();
-        services.AddTransient<IPricesWriter, CreateFile>();
+        services.AddTransient<IFileContent, FileData>();
         services.AddTransient<ICompression, GzipCompress>();
+        services.AddTransient<IFileWriter, LocalFileWriter>();
         services.AddTransient<Configuration>();
         services.AddSingleton<PricesLoader>();
     })
