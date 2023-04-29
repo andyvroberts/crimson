@@ -1,4 +1,5 @@
-﻿using Crimson.Infra.PricesReader;
+﻿using Microsoft.Extensions.DependencyInjection;
+using Crimson.Infra.PricesReader;
 using Crimson.Infra.FileExporter;
 using Crimson.Models;
 using System.Text;
@@ -8,12 +9,12 @@ namespace Crimson
     public class PricesLoader
     {
         private readonly IPricesReader _reader;
-        private readonly IFileContent _writer;
+        private readonly IServiceScopeFactory _scopeFactory;
 
-        public PricesLoader(IPricesReader reader, IFileContent writer)
+        public PricesLoader(IServiceScopeFactory scopeFactory, IPricesReader reader)
         {
             _reader = reader;
-            _writer = writer;
+            _scopeFactory = scopeFactory;
         }
 
         public void Run()
@@ -26,56 +27,57 @@ namespace Crimson
 
             var postcodeSet =
                 from p in data.AsParallel()
-                orderby p.Postcode
+                orderby p.Postcode, p.Date
                 group p by p.Postcode into pGroup
                 select pGroup;
 
-            int cnt = 1;
-            UnicodeEncoding _coding = new();
+            // int cnt = 1;
 
-            foreach (IGrouping<string, Crimson.Models.PriceRecord> pg in postcodeSet)
+            // foreach (IGrouping<string, Crimson.Models.PriceRecord> pg in postcodeSet)
+            // {
+            //     // use the Service Locator Pattern to add a different scope for each iteration.
+            //     using var scope = _scopeFactory.CreateScope();
+            //     var _writer = scope.ServiceProvider.GetRequiredService<IFileContent>();
+
+            //     if (cnt > 0)
+            //     {
+            //         _writer.EncodeToStream(pg);
+            //         _writer.Compress();
+            //         _writer.Write(pg.Key);
+            //         _writer.Dispose();
+            //         cnt += 1;
+            //     }
+            // }
+
+            if (postcodeSet.Any())
             {
-                if (cnt > 0)
+                try
                 {
-                    _writer.EncodeToStream(pg);
-                    _writer.Compress();
+                    Parallel.ForEach(postcodeSet, eachSet =>
+                    {
+                        Interlocked.Increment(ref groupCount);
+                        Interlocked.Add(ref recCount, eachSet.Count());
+                        Console.WriteLine($"{eachSet.Key}: {eachSet.Count()}");
 
-                    //Console.WriteLine($"Size = {_writer.CompressedData.Length}");
+                        // use the Service Locator Pattern to add a different scope for each iteration.
+                        using var scope = _scopeFactory.CreateScope();
+                        var _writer = scope.ServiceProvider.GetRequiredService<IFileContent>();
 
-                    // if (cnt <= 1000)
-                    // {
-                    //     Console.WriteLine($"return count = 1:");
-                    //     dataStream.Position = 0;
-                    //     StreamReader _temp = new StreamReader(dataStream); 
-                    //     var _show = _temp.ReadToEnd();
-                    //     Console.WriteLine(_show);
-                    // }
-                    _writer.Write(pg.Key);
-                    _writer.Dispose();
-                    cnt += 1;
+                        _writer.EncodeToStream(eachSet);
+                        _writer.Compress();
+                        _writer.Write(eachSet.Key);
+                        _writer.Dispose();
+                    });
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Error in Parallel: {ex.Message}");
                 }
             }
-
-            // if (postcodeSet.Any())
-            // {
-            //     try
-            //     {
-            //         Parallel.ForEach(postcodeSet, eachSet =>
-            //         {
-            //             Interlocked.Increment(ref groupCount);
-            //             Interlocked.Add(ref recCount, eachSet.Count());
-            //             Console.WriteLine($"{eachSet.Key}: {eachSet.Count()}");
-            //         });
-            //     }
-            //     catch (Exception ex)
-            //     {
-            //         Console.WriteLine($"Error in Parallel: {ex.Message}");
-            //     }
-            // }
-            // else
-            // {
-            //     Console.WriteLine($"No postcodes to group.");
-            // }
+            else
+            {
+                Console.WriteLine($"No postcodes to group.");
+            }
 
             Console.WriteLine($"Executed {groupCount} Loops.");
             Console.WriteLine($"Contained {recCount} total records.");

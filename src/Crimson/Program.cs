@@ -15,11 +15,13 @@ using var host = Host.CreateDefaultBuilder(args)
     {
         services.AddTransient<IPricesReader, WebFileReader>();
         services.AddTransient<IPricesParser, PricesParser>();
-        services.AddTransient<IFileContent, FileData>();
-        services.AddTransient<ICompression, GzipCompress>();
-        services.AddTransient<IFileWriter, LocalFileWriter>();
         services.AddTransient<Configuration>();
-        services.AddSingleton<PricesLoader>();
+
+        services.AddTransient<PricesLoader>();
+
+        services.AddScoped<IFileContent, FileData>();
+        services.AddScoped<ICompression, GzipCompress>();
+        services.AddScoped<IFileWriter, LocalFileWriter>();
     })
     .Build();
 
