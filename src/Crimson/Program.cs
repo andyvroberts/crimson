@@ -11,13 +11,16 @@ using Crimson.Infra;
 // 1. context (which we are not using but is mandatory)
 // 2. service collection that we will use to register classes for DI
 using var host = Host.CreateDefaultBuilder(args)
+    .UseDefaultServiceProvider((context, options) => {
+        options.ValidateScopes = true;
+    })
     .ConfigureServices((_, services) =>
     {
         services.AddTransient<IPricesReader, WebFileReader>();
         services.AddTransient<IPricesParser, PricesParser>();
-        services.AddTransient<Configuration>();
-
         services.AddTransient<PricesLoader>();
+
+        services.AddSingleton<Configuration>();
 
         services.AddScoped<IFileContent, FileData>();
         services.AddScoped<ICompression, GzipCompress>();

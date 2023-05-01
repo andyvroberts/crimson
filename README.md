@@ -8,7 +8,7 @@ http://prod.publicdata.landregistry.gov.uk.s3-website-eu-west-1.amazonaws.com/pp
 
 As of April 2023, this file contained approx. 28 million records and was 4.6Gb (uncompressed).  
 
-The latest dated records within this file can be up to 1 or 2 months old (the file is updated only periodically from the smaller yearly version).  To find the newest date in the file, sort by column 3.
+The latest dated records within this file can be up to several weeks old (the file is updated only periodically from the smaller yearly version).  To find the newest date in the file, sort by column 3.
 ```
 sort -t',' -k3 pp-complete.csv | head -1
 ```
@@ -35,7 +35,7 @@ Add required packages from nuget
 dotnet add package Microsoft.Extensions.Hosting --version 7.0.1
 ```
 
-In the csproj file, ensure your creating an executable by adding the property group:
+In the csproj file, ensure you are creating an executable by adding the property group:
 ```
 <OutputType>Exe</OutputType>
 ```

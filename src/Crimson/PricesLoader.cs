@@ -57,7 +57,7 @@ namespace Crimson
                     {
                         Interlocked.Increment(ref groupCount);
                         Interlocked.Add(ref recCount, eachSet.Count());
-                        Console.WriteLine($"{eachSet.Key}: {eachSet.Count()}");
+                        // Console.WriteLine($"{eachSet.Key}: {eachSet.Count()}");
 
                         // use the Service Locator Pattern to add a different scope for each iteration.
                         using var scope = _scopeFactory.CreateScope();

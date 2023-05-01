@@ -38,7 +38,7 @@ namespace Crimson.Infra.FileExporter
                 pricesData.Write(line);
                 pLoop += 1;
             }
-            Console.WriteLine($"Data size = {pricesData.Length}");
+            // Console.WriteLine($"Data size = {pricesData.Length}");
             pricesData.Position = 0;
         }
 
@@ -46,7 +46,7 @@ namespace Crimson.Infra.FileExporter
         {
             _compressor.Compress(pricesData);
 
-            Console.WriteLine($"Compressed data size is {_compressor.CompressedData.Length}");
+            // Console.WriteLine($"Compressed data size is {_compressor.CompressedData.Length}");
         }
 
         public void Write(string fileName)
