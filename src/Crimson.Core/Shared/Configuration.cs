@@ -1,6 +1,6 @@
 using System;
 
-namespace Crimson.Shared
+namespace Crimson.Core.Shared
 {
     public class Configuration
     {

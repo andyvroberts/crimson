@@ -1,9 +1,9 @@
-using Crimson.Shared;
-using Crimson.Models;
+using Crimson.Core.Shared;
+using Crimson.Model;
 
-namespace Crimson.Infra.PricesReader
+namespace Crimson.Core.Importer
 {
-    internal class WebFileReader : IPricesReader
+    public class WebFileReader : IPricesReader
     {
         private readonly Configuration _config;
         private readonly IPricesParser _parser;

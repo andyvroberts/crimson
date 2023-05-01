@@ -1,6 +1,6 @@
 using System.IO.Compression;
 
-namespace Crimson.Infra.FileExporter
+namespace Crimson.Core.Exporter
 {
     public class GzipCompress : ICompression
     {

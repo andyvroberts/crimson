@@ -1,6 +1,6 @@
 
 
-namespace Crimson.Infra.FileExporter
+namespace Crimson.Core.Exporter
 {
     public interface IFileWriter
     {

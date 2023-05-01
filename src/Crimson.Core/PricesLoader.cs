@@ -1,10 +1,8 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using Crimson.Infra.PricesReader;
-using Crimson.Infra.FileExporter;
-using Crimson.Models;
-using System.Text;
+using Crimson.Core.Importer;
+using Crimson.Core.Exporter;
 
-namespace Crimson
+namespace Crimson.Core
 {
     public class PricesLoader
     {

@@ -1,7 +1,7 @@
-using Crimson.Models;
+using Crimson.Model;
 using System.Text;
 
-namespace Crimson.Infra.FileExporter
+namespace Crimson.Core.Exporter
 {
     public class FileData : IFileContent
     {

@@ -1,7 +1,7 @@
-using Crimson.Shared;
-using Crimson.Models;
+using Crimson.Core.Shared;
+using Crimson.Model;
 
-namespace Crimson.Infra.FileExporter
+namespace Crimson.Core.Exporter
 {
     public class LocalFileWriter : IFileWriter
     {

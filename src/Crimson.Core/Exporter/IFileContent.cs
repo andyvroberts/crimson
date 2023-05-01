@@ -1,6 +1,6 @@
-using Crimson.Models;
+using Crimson.Model;
 
-namespace Crimson.Infra.FileExporter
+namespace Crimson.Core.Exporter
 {
     public  interface IFileContent
     {

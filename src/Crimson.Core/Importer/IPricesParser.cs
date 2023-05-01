@@ -1,6 +1,6 @@
-using Crimson.Models;
+using Crimson.Model;
 
-namespace Crimson.Infra.PricesReader
+namespace Crimson.Core.Importer
 {
     public interface IPricesParser
     {

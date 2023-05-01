@@ -39,6 +39,21 @@ In the csproj file, ensure you are creating an executable by adding the property
 ```
 <OutputType>Exe</OutputType>
 ```
+  
+If not using Visual Studio then you have to manage projects within a solution yourself.   
+For example, create a new classlib, add a new solution file then register the classlib to the solution file.
+```
+dotnet new classlib --name Crimson.CompRoot --framework "net6.0"
+
+dotnet new sln --name Crimson
+
+dotnet sln add Crimson.CompRoot
+```
+In some projects, you will now have to add references to other projects in their csproj file.   
+For example, in the executable (entry point) project, add the composition root project
+```
+dotnet add Crimson/Crimson.csproj reference Crimson.CompRoot/Crimson.CompRoot.csproj
+```
 
 
 

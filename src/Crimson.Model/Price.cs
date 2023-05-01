@@ -1,5 +1,5 @@
 
-namespace Crimson.Models
+namespace Crimson.Model
 {
     public class PriceRecord
     {
