@@ -21,6 +21,7 @@ namespace Crimson.CompRoot
             services.AddTransient<PricesLoader>();
 
             services.AddSingleton<Configuration>();
+            services.AddSingleton<IExportStats, PostcodeFileStats>();
 
             services.AddScoped<IFileContent, FileData>();
             services.AddScoped<ICompression, GzipCompress>();

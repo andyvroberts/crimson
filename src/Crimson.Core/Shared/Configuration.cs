@@ -9,6 +9,7 @@ namespace Crimson.Core.Shared
 
         public string FileExtension = ".dat.gz";
 
-        public string WebFileLocation = "http://prod.publicdata.landregistry.gov.uk.s3-website-eu-west-1.amazonaws.com/pp-monthly-update-new-version.csv";
+        public string WebFileLocation = "http://prod.publicdata.landregistry.gov.uk.s3-website-eu-west-1.amazonaws.com/pp-2022.csv";
+        public string WebFileMonthly = "http://prod.publicdata.landregistry.gov.uk.s3-website-eu-west-1.amazonaws.com/pp-monthly-update-new-version.csv";
     }
 }

@@ -21,7 +21,7 @@ namespace Crimson.Core.Importer
             List<PriceRecord> prices = new();
 
             // force GetAsync to be synchronous by using .Result
-            HttpResponseMessage response = client.GetAsync(_config.WebFileLocation).Result;
+            HttpResponseMessage response = client.GetAsync(_config.WebFileMonthly).Result;
             Stream csvData = response.Content.ReadAsStream();
 
             double? contentSize = (double?)response.Content.Headers.ContentLength / 1024 / 1024 / 1024;

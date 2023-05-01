@@ -22,7 +22,7 @@ namespace Crimson.Core.Exporter
             pricesData = new();
         }
 
-        public void EncodeToStream(IEnumerable<PriceRecord> prices)
+        public int EncodeToStream(IEnumerable<PriceRecord> prices)
         {
             ReadOnlySpan<byte> line = new();
             var pCount = prices.Count();
@@ -40,6 +40,7 @@ namespace Crimson.Core.Exporter
             }
             // Console.WriteLine($"Data size = {pricesData.Length}");
             pricesData.Position = 0;
+            return pLoop;
         }
 
         public void Compress()
@@ -49,9 +50,10 @@ namespace Crimson.Core.Exporter
             // Console.WriteLine($"Compressed data size is {_compressor.CompressedData.Length}");
         }
 
-        public void Write(string fileName)
+        public string Write(string fileName)
         {
-            _writer.SaveFile(_compressor.CompressedData, fileName);
+            fileName = _writer.SaveFile(_compressor.CompressedData, fileName);
+            return fileName;
         }
 
         public void Dispose()

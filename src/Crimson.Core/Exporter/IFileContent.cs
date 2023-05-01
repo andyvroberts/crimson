@@ -6,11 +6,11 @@ namespace Crimson.Core.Exporter
     {
         MemoryStream PricesData {get;}
 
-        void EncodeToStream (IEnumerable<PriceRecord> prices);
+        int EncodeToStream (IEnumerable<PriceRecord> prices);
 
         void Compress();
 
-        void Write(string fileName);
+        string Write(string fileName);
 
         void Dispose();
     }

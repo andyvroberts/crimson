@@ -12,7 +12,7 @@ namespace Crimson.Core.Exporter
             _config = config;
         }
 
-        public void SaveFile(MemoryStream data, string fileName)
+        public string SaveFile(MemoryStream data, string fileName)
         {
             var path = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
             var fullName = fileName.Replace(" ","") + _config.FileExtension;
@@ -22,6 +22,7 @@ namespace Crimson.Core.Exporter
             {
                 data.CopyTo(fileData);
             }
+            return fullName;
         }
     }
 }

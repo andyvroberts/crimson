@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using Crimson.Core.Shared;
 using Crimson.Core.Importer;
 using Crimson.Core.Exporter;
 
@@ -7,11 +8,13 @@ namespace Crimson.Core
     public class PricesLoader
     {
         private readonly IPricesReader _reader;
+        private readonly IExportStats _stats;
         private readonly IServiceScopeFactory _scopeFactory;
 
-        public PricesLoader(IServiceScopeFactory scopeFactory, IPricesReader reader)
+        public PricesLoader(IServiceScopeFactory scopeFactory, IPricesReader reader, IExportStats stats)
         {
             _reader = reader;
+            _stats = stats;
             _scopeFactory = scopeFactory;
         }
 
@@ -61,10 +64,12 @@ namespace Crimson.Core
                         using var scope = _scopeFactory.CreateScope();
                         var _writer = scope.ServiceProvider.GetRequiredService<IFileContent>();
 
-                        _writer.EncodeToStream(eachSet);
+                        var priceCount = _writer.EncodeToStream(eachSet);
                         _writer.Compress();
-                        _writer.Write(eachSet.Key);
+                        var fileName = _writer.Write(eachSet.Key);
                         _writer.Dispose();
+
+                        _stats.AddPostcodeStat(eachSet.Key, fileName, priceCount);
                     });
                 }
                 catch (Exception ex)
