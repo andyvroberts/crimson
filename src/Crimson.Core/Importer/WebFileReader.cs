@@ -16,7 +16,7 @@ namespace Crimson.Core.Importer
             _parser = parser;
         }
 
-        public IEnumerable<PriceRecord> GetPrices()
+        public IEnumerable<PriceRecord> GetAll()
         {
             List<PriceRecord> prices = new();
 
@@ -47,6 +47,11 @@ namespace Crimson.Core.Importer
             }
 
             return prices;
+        }
+
+        public IEnumerable<PriceRecord> GetByPostcodeScan(string startsWith)
+        {
+            throw new NotImplementedException();
         }
     }
 }

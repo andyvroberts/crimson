@@ -1,7 +1,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Crimson.CompRoot;
-using Crimson.Core;
+using Crimson;
 
 // Register the application host for the DI container.
 // The ConfigureServices parameters are 
@@ -14,11 +14,12 @@ using var host = Host.CreateDefaultBuilder(args)
     .ConfigureServices((_, services) =>
     {
         services.AddCrimson();
+        services.AddTransient<CrimsonConsole>();
     })
     .Build();
 
 // Resolving phase of DI container for instantiating what we need.
-var pricesLoader = host.Services.GetRequiredService<PricesLoader>();
+var consoleApp = host.Services.GetRequiredService<CrimsonConsole>();
 
 // Entry point to application
-pricesLoader.Run();
+consoleApp.Run();

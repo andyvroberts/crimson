@@ -4,6 +4,8 @@ namespace Crimson.Core.Importer
 {
     public interface IPricesReader
     {
-        IEnumerable<PriceRecord> GetPrices();
+        IEnumerable<PriceRecord> GetAll();
+
+        IEnumerable<PriceRecord> GetByPostcodeScan(string startsWith);
     }
 }

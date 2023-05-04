@@ -23,7 +23,7 @@ namespace Crimson.Core
             var groupCount = 0;
             var recCount = 0;
 
-            var data = _reader.GetPrices();
+            var data = _reader.GetAll();
             Console.WriteLine($"Found {data.Count()} prices");
 
             var postcodeSet =

@@ -7,19 +7,18 @@ namespace Crimson.Core.Importer
     {
         private readonly Configuration _config;
         private readonly IPricesParser _parser;
+        private List<PriceRecord> _prices;
 
         public LocalFileReader(Configuration config, IPricesParser parser)
         {
             _config = config;
             _parser = parser;
+            _prices = new();
         }
 
-        public IEnumerable<PriceRecord> GetPrices()
+        public IEnumerable<PriceRecord> GetAll()
         {
-            List<PriceRecord> prices = new();
-
-            var path = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
-            var fullPath = Path.Combine(path, _config.LocalFileLocation, _config.LocalFileName);
+            string fullPath = ConstructPath();
 
             using (FileStream fs = File.OpenRead(fullPath))
             {
@@ -34,7 +33,7 @@ namespace Crimson.Core.Importer
 
                             if (nextPrice != null)
                             {
-                                prices.Add(nextPrice);
+                                _prices.Add(nextPrice);
                             }
 
                         }
@@ -43,7 +42,20 @@ namespace Crimson.Core.Importer
                 }
             }
 
-            return prices;
+            return _prices;
         }
+
+        public IEnumerable<PriceRecord> GetByPostcodeScan(string startsWith)
+        {
+            throw new NotImplementedException();
+        }
+
+        private string ConstructPath()
+        {
+            var path = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+            var fullPath = Path.Combine(path, _config.LocalFileLocation, _config.LocalFileName);
+            return fullPath;
+        }
+
     }
 }
