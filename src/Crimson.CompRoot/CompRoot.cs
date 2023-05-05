@@ -16,9 +16,9 @@ namespace Crimson.CompRoot
         /// </summary>
         public static IServiceCollection AddCrimson(this IServiceCollection services)
         {
-            services.AddTransient<IPricesReader, WebFileReader>();
+            services.AddTransient<IPricesReader, LocalFileReader>();
             services.AddTransient<IPricesParser, PricesParser>();
-            services.AddTransient<PricesLoader>();
+            services.AddTransient<ICrimson, PostcodesLoader>();
 
             services.AddSingleton<Configuration>();
             services.AddSingleton<IExportStats, PostcodeFileStats>();

@@ -19,11 +19,12 @@ namespace Crimson.Core.Importer
                 else
                 {
                     StringBuilder address = new();
-                    if (! string.IsNullOrWhiteSpace(nextLine[7])) address.Append(nextLine[7] + ' ');
-                    if (! string.IsNullOrWhiteSpace(nextLine[8])) address.Append(nextLine[8] + ' ');
-                    if (! string.IsNullOrWhiteSpace(nextLine[9])) address.Append(nextLine[9]);
+                    if (!string.IsNullOrWhiteSpace(nextLine[7])) address.Append(nextLine[7] + ' ');
+                    if (!string.IsNullOrWhiteSpace(nextLine[8])) address.Append(nextLine[8] + ' ');
+                    if (!string.IsNullOrWhiteSpace(nextLine[9])) address.Append(nextLine[9]);
 
-                    price.Postcode = nextLine[3];
+                    price.Outcode = nextLine[3].ToUpper().Split(' ')[0];
+                    price.Postcode = nextLine[3].ToUpper();
                     price.Address = address.ToString().TrimEnd();
                     price.Price = nextLine[1];
                     price.Date = nextLine[2].Substring(0, 10);
@@ -38,6 +39,7 @@ namespace Crimson.Core.Importer
             }
             return price;
         }
+
 
         private List<string> DecodeCsvLine(string csvLine)
         {

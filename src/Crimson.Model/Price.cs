@@ -3,6 +3,7 @@ namespace Crimson.Model
 {
     public class PriceRecord
     {
+        public string? Outcode { get; set; }
         public string? Postcode { get; set; }
         public string? Address { get; set; }
         public string? Price { get; set; }
@@ -17,7 +18,7 @@ namespace Crimson.Model
 
         public override string ToString()
         {
-            return $"{Postcode}|{Address}|{Price}|{Date}|{Locality}|{Town}|{District}|{County}|{PropertyType}|{Duration}|{NewBuild}";
+            return $"{Outcode}|{Postcode}|{Address}|{Price}|{Date}|{Locality}|{Town}|{District}|{County}|{PropertyType}|{Duration}|{NewBuild}";
         }
     }
 

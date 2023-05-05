@@ -16,7 +16,11 @@ namespace Crimson.Core.Importer
             _prices = new();
         }
 
-        public IEnumerable<PriceRecord> GetAll()
+        /// <summary>
+        /// Open a file on the local file system and read the property prices.
+        /// The file to open has been downloaded from the UK Land Registry.
+        /// </summary>
+        public IEnumerable<PriceRecord> GetPrices()
         {
             string fullPath = ConstructPath();
 
@@ -41,14 +45,48 @@ namespace Crimson.Core.Importer
                     }
                 }
             }
-
             return _prices;
         }
 
-        public IEnumerable<PriceRecord> GetByPostcodeScan(string startsWith)
+        /// <summary>
+        /// Open a file on the local file system and read the property prices.
+        /// The file to open has been downloaded from the UK Land Registry.
+        /// </summary>
+        /// <param name="startsWith">
+        /// An optional StartsWith scan to restrict postcodes or outcodes.
+        /// </param>
+        public IEnumerable<PriceRecord> GetPrices(string startsWith)
         {
-            throw new NotImplementedException();
+            string fullPath = ConstructPath();
+
+            using (FileStream fs = File.OpenRead(fullPath))
+            {
+                using (StreamReader reader = new(fs))
+                {
+                    while (reader.Peek() > 0)
+                    {
+                        var line = reader.ReadLine();
+                        if (line != null)
+                        {
+                            var nextPrice = _parser.ConvertCsvLine(line);
+
+                            if (nextPrice != null)
+                            {
+                                if (!string.IsNullOrEmpty(nextPrice.Outcode))
+                                {
+                                    if (nextPrice.Outcode.StartsWith(startsWith.ToUpper()))
+                                        _prices.Add(nextPrice);
+                                }
+                            }
+
+                        }
+
+                    }
+                }
+            }
+            return _prices;
         }
+
 
         private string ConstructPath()
         {
