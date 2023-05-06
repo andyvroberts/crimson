@@ -1,9 +1,10 @@
 using static System.ConsoleColor;
+using System.Diagnostics;
 using Crimson.Core;
 
 namespace Crimson
 {
-    public class CrimsonConsole 
+    public class CrimsonConsole
     {
         private readonly ICrimson _crimson;
         private bool _remainInConsole = true;
@@ -20,6 +21,8 @@ namespace Crimson
 
             while (_remainInConsole)
             {
+                Stopwatch priceTimer = new();
+
                 Console.WriteLine("1.   Scan by StartsWith");
                 Console.WriteLine("2.   Load All");
                 Console.WriteLine("X.   Exit");
@@ -30,28 +33,33 @@ namespace Crimson
                 {
                     _remainInConsole = false;
                 }
-                else 
+                else
                 {
                     if (int.TryParse(_opt, out actionChoice))
                     {
+                        var _scanStartsWith = string.Empty;
+
+                        priceTimer.Start();
                         switch (actionChoice)
                         {
                             case 1:
                                 Console.WriteLine($"You choose to scan with a string");
-                                string _scanStartsWith = InputScanString();
-                                _crimson.Run(_scanStartsWith);
+                                _crimson.Run(InputScanString());
                                 break;
                             case 2:
                                 Console.WriteLine($"You choose to load everything");
+                                _crimson.Run(string.Empty);
                                 break;
                         }
+                        priceTimer.Stop();
+                        Console.WriteLine($"Loader ran in {priceTimer.Elapsed} elapsed.");
                     }
-                    else 
+                    else
                     {
                         //Console.ForegroundColor = ConsoleColor.DarkRed;
                         Console.WriteLine($"Please enter a valid option.  You entered [{_opt}]");
+                        //Console.ForegroundColor = lastTextColour;
                     }
-                    Console.ForegroundColor = lastTextColour;
                 }
             }
         }
