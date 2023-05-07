@@ -1,3 +1,4 @@
+using System;
 using Crimson.Core.Shared;
 using Crimson.Model;
 
@@ -23,6 +24,7 @@ namespace Crimson.Core.Importer
         public IEnumerable<PriceRecord> GetPrices()
         {
             string fullPath = ConstructPath();
+            int recCount = 0;
 
             using (FileStream fs = File.OpenRead(fullPath))
             {
@@ -31,6 +33,8 @@ namespace Crimson.Core.Importer
                     while (reader.Peek() > 0)
                     {
                         var line = reader.ReadLine();
+                        recCount++;
+
                         if (line != null)
                         {
                             var nextPrice = _parser.ConvertCsvLine(line);
@@ -40,6 +44,11 @@ namespace Crimson.Core.Importer
                                 _prices.Add(nextPrice);
                             }
 
+                        }
+
+                        if ((recCount % 100000) == 0)
+                        {
+                            Console.WriteLine($"Read count = {recCount}.");
                         }
 
                     }
@@ -58,6 +67,7 @@ namespace Crimson.Core.Importer
         public IEnumerable<PriceRecord> GetPrices(string startsWith)
         {
             string fullPath = ConstructPath();
+            int recCount = 0;
 
             using (FileStream fs = File.OpenRead(fullPath))
             {
@@ -66,6 +76,8 @@ namespace Crimson.Core.Importer
                     while (reader.Peek() > 0)
                     {
                         var line = reader.ReadLine();
+                        recCount++;
+
                         if (line != null)
                         {
                             var nextPrice = _parser.ConvertCsvLine(line);
@@ -78,7 +90,11 @@ namespace Crimson.Core.Importer
                                         _prices.Add(nextPrice);
                                 }
                             }
+                        }
 
+                        if ((recCount % 100000) == 0)
+                        {
+                            Console.WriteLine($"Read count = {recCount}.");
                         }
 
                     }

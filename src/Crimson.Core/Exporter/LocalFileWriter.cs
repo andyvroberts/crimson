@@ -22,6 +22,7 @@ namespace Crimson.Core.Exporter
             {
                 data.CopyTo(fileData);
             }
+            //Console.WriteLine($"Created file {fullName}.");
             return fullName;
         }
     }
