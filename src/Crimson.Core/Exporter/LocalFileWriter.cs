@@ -15,14 +15,14 @@ namespace Crimson.Core.Exporter
         public string SaveFile(MemoryStream data, string fileName)
         {
             var path = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
-            var fullName = fileName.Replace(" ","") + _config.FileExtension;
+            var fullName = fileName.Replace(" ", "") + _config.FileExtension;
             var fullPath = Path.Combine(path, _config.LocalFileLocation, fullName);
 
             using (FileStream fileData = File.Create(fullPath))
             {
                 data.CopyTo(fileData);
             }
-            //Console.WriteLine($"Created file {fullName}.");
+            Console.WriteLine($"Created file {fullName}.");
             return fullName;
         }
     }
