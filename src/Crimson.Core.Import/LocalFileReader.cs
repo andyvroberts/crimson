@@ -1,18 +1,17 @@
-using System;
-using Crimson.Core.Shared;
+using Microsoft.Extensions.Options;
 using Crimson.Model;
 
-namespace Crimson.Core.Importer
+namespace Crimson.Core.Import
 {
     public class LocalFileReader : IPricesReader
     {
-        private readonly Configuration _config;
+        private readonly IOptions<CrimsonImportOptions> _importOptions;
         private readonly IPricesParser _parser;
         private List<PriceRecord> _prices;
 
-        public LocalFileReader(Configuration config, IPricesParser parser)
+        public LocalFileReader(IOptions<CrimsonImportOptions> importOptions, IPricesParser parser)
         {
-            _config = config;
+            _importOptions = importOptions;
             _parser = parser;
             _prices = new();
         }
@@ -107,7 +106,10 @@ namespace Crimson.Core.Importer
         private string ConstructPath()
         {
             var path = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
-            var fullPath = Path.Combine(path, _config.LocalFileLocation, _config.LocalFileName);
+            var fullPath = Path.Combine(
+                path,  
+                _importOptions.Value.LocalFileLocation, 
+                _importOptions.Value.LocalFileName);
             return fullPath;
         }
 

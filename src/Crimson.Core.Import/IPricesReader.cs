@@ -1,6 +1,6 @@
 using Crimson.Model;
 
-namespace Crimson.Core.Importer
+namespace Crimson.Core.Import
 {
     /// <summary>
     /// Open and read a file of property prices.

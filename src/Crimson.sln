@@ -11,6 +11,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Crimson.Model", "Crimson.Mo
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Crimson.Core", "Crimson.Core\Crimson.Core.csproj", "{0F39D530-2B1F-4130-87EB-32ABC48CD7FE}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Crimson.Core.Import", "Crimson.Core.Import\Crimson.Core.Import.csproj", "{2EA96D51-3026-4AFD-AA25-C41610EB42C2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Crimson.Core.Export", "Crimson.Core.Export\Crimson.Core.Export.csproj", "{2F734C83-92CB-4DE9-8996-C1DCD59F4D8C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -36,5 +40,13 @@ Global
 		{0F39D530-2B1F-4130-87EB-32ABC48CD7FE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0F39D530-2B1F-4130-87EB-32ABC48CD7FE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0F39D530-2B1F-4130-87EB-32ABC48CD7FE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2EA96D51-3026-4AFD-AA25-C41610EB42C2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2EA96D51-3026-4AFD-AA25-C41610EB42C2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2EA96D51-3026-4AFD-AA25-C41610EB42C2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2EA96D51-3026-4AFD-AA25-C41610EB42C2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2F734C83-92CB-4DE9-8996-C1DCD59F4D8C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2F734C83-92CB-4DE9-8996-C1DCD59F4D8C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2F734C83-92CB-4DE9-8996-C1DCD59F4D8C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2F734C83-92CB-4DE9-8996-C1DCD59F4D8C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

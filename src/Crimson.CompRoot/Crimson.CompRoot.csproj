@@ -12,6 +12,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Crimson.Core\Crimson.Core.csproj" />
+    <ProjectReference Include="..\Crimson.Core.Import\Crimson.Core.Import.csproj" />
+    <ProjectReference Include="..\Crimson.Core.Export\Crimson.Core.Export.csproj" />
   </ItemGroup>
 
 </Project>

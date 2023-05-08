@@ -1,8 +1,8 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Crimson.Core.Shared;
 using Crimson.Model;
-using Crimson.Core.Importer;
-using Crimson.Core.Exporter;
+using Crimson.Core.Import;
+using Crimson.Core.Export;
 
 namespace Crimson.Core
 {

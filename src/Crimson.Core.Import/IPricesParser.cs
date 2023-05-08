@@ -1,6 +1,6 @@
 using Crimson.Model;
 
-namespace Crimson.Core.Importer
+namespace Crimson.Core.Import
 {
     /// <summary>
     /// Parse a text line that is in a CSV format.

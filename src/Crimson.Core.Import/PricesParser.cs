@@ -1,7 +1,7 @@
 using System.Text;
 using Crimson.Model;
 
-namespace Crimson.Core.Importer
+namespace Crimson.Core.Import
 {
     public class PricesParser : IPricesParser
     {

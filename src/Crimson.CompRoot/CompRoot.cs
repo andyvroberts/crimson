@@ -1,8 +1,6 @@
 using Microsoft.Extensions.DependencyInjection;
-using Crimson.Core.Shared;
 using Crimson.Core;
-using Crimson.Core.Importer;
-using Crimson.Core.Exporter;
+using Crimson.Core.Import;
 
 namespace Crimson.CompRoot
 {
@@ -16,16 +14,8 @@ namespace Crimson.CompRoot
         /// </summary>
         public static IServiceCollection AddCrimson(this IServiceCollection services)
         {
-            services.AddTransient<IPricesReader, LocalFileReader>();
-            services.AddTransient<IPricesParser, PricesParser>();
-            services.AddTransient<ICrimson, PostcodesLoader>();
-
-            services.AddSingleton<Configuration>();
-            services.AddSingleton<IExportStats, PostcodeFileStats>();
-
-            services.AddScoped<IFileContent, FileData>();
-            services.AddScoped<ICompression, GzipCompress>();
-            services.AddScoped<IFileWriter, LocalFileWriter>();
+            services.AddCrimsonImport(o => o.EnableWebImporter = true);
+            services.AddCrimsonCore();
 
             return services;
         }
