@@ -1,6 +1,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using Crimson.Core;
 using Crimson.Core.Import;
+using Crimson.Core.Export;
 
 namespace Crimson.CompRoot
 {
@@ -15,6 +16,7 @@ namespace Crimson.CompRoot
         public static IServiceCollection AddCrimson(this IServiceCollection services)
         {
             services.AddCrimsonImport(o => o.EnableWebImporter = true);
+            services.AddCrimsonExport(o => o.EnableParallelExport = false);
             services.AddCrimsonCore();
 
             return services;

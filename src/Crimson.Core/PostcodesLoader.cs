@@ -1,23 +1,22 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using Crimson.Core.Shared;
+﻿using Crimson.Core.Shared;
 using Crimson.Model;
 using Crimson.Core.Import;
 using Crimson.Core.Export;
 
 namespace Crimson.Core
 {
-    public class PostcodesLoader: ICrimson
+    public class PostcodesLoader : ICrimson
     {
         private readonly IPricesReader _reader;
         private readonly IExportStats _stats;
-        private readonly IServiceScopeFactory _scopeFactory;
+        private readonly IExporter _exporter;
         private IEnumerable<PriceRecord>? _data;
 
-        public PostcodesLoader(IServiceScopeFactory scopeFactory, IPricesReader reader, IExportStats stats)
+        public PostcodesLoader(IExporter exporter, IPricesReader reader, IExportStats stats)
         {
             _reader = reader;
             _stats = stats;
-            _scopeFactory = scopeFactory;
+            _exporter = exporter;
         }
 
         /// <summary>
@@ -30,56 +29,23 @@ namespace Crimson.Core
         /// </param>
         public void Run(string scanValue)
         {
-            var groupCount = 0;
-            var recCount = 0;
-
             if (string.IsNullOrEmpty(scanValue))
                 _data = _reader.GetPrices();
-            else 
+            else
                 _data = _reader.GetPrices(scanValue);
 
-            Console.WriteLine($"Found {_data.Count()} prices");
-
             var postcodeSet =
-                from p in _data.AsParallel()
+                from p in _data
                 orderby p.Postcode, p.Date
                 group p by p.Postcode into pGroup
                 select pGroup;
 
-            if (postcodeSet.Any())
-            {
-                try
-                {
-                    Parallel.ForEach(postcodeSet, eachSet =>
-                    {
-                        Interlocked.Increment(ref groupCount);
-                        Interlocked.Add(ref recCount, eachSet.Count());
-                        // Console.WriteLine($"{eachSet.Key}: {eachSet.Count()}");
+            Console.WriteLine($"Found {_data.Count()} prices");
 
-                        // use the Service Locator Pattern to add a different scope for each iteration.
-                        using var scope = _scopeFactory.CreateScope();
-                        var _writer = scope.ServiceProvider.GetRequiredService<IFileContent>();
+            _exporter.Export(postcodeSet);
 
-                        var priceCount = _writer.EncodeToStream(eachSet);
-                        _writer.Compress();
-                        var fileName = _writer.Write(eachSet.Key);
-                        _writer.Dispose();
-
-                        _stats.AddPostcodeStat(eachSet.Key, fileName, priceCount);
-                    });
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"Error in Parallel: {ex.Message}");
-                }
-            }
-            else
-            {
-                Console.WriteLine($"No postcodes to group.");
-            }
-
-            Console.WriteLine($"Executed {groupCount} Loops.");
-            Console.WriteLine($"Contained {recCount} total records.");
+            // Console.WriteLine($"Executed {groupCount} Loops.");
+            // Console.WriteLine($"Contained {recCount} total records.");
         }
     }
 }

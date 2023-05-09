@@ -1,7 +1,6 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Crimson.CompRoot;
-using Crimson;
 
 
 /// <summary>
@@ -15,15 +14,14 @@ using var host = Host.CreateDefaultBuilder(args)
     {
         options.ValidateScopes = true;
     })
-    .ConfigureServices((_, services) =>
+    .ConfigureServices((context, services) =>
     {
         services.AddCrimson();
-        services.AddTransient<CrimsonConsole>();
     })
     .Build();
 
 // Resolving phase of DI container for instantiating what we need.
-var consoleApp = host.Services.GetRequiredService<CrimsonConsole>();
+var consoleApp = host.Services.GetRequiredService<Crimson.CrimsonConsole>();
 
 // Entry point to application
 consoleApp.Run();
