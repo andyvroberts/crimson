@@ -29,23 +29,36 @@ namespace Crimson.Core
         /// </param>
         public void Run(string scanValue)
         {
-            if (string.IsNullOrEmpty(scanValue))
-                _data = _reader.GetPrices();
-            else
-                _data = _reader.GetPrices(scanValue);
+            _data = _reader.GetPrices(scanValue);
+            GroupAndExport();
 
+            // Console.WriteLine($"Executed {groupCount} Loops.");
+            // Console.WriteLine($"Contained {recCount} total records.");
+        }
+
+        public void Run()
+        {
+            _data = _reader.GetPrices();
+            GroupAndExport();
+
+            // Console.WriteLine($"Executed {groupCount} Loops.");
+            // Console.WriteLine($"Contained {recCount} total records.");
+        }
+
+        private void GroupAndExport()
+        {
             var postcodeSet =
                 from p in _data
                 orderby p.Postcode, p.Date
                 group p by p.Postcode into pGroup
                 select pGroup;
 
-            Console.WriteLine($"Found {_data.Count()} prices");
-
+            if (_data != null)
+                Console.WriteLine($"Found {_data.Count()} prices");
+            else
+                Console.WriteLine($"No prices found");
+                
             _exporter.Export(postcodeSet);
-
-            // Console.WriteLine($"Executed {groupCount} Loops.");
-            // Console.WriteLine($"Contained {recCount} total records.");
         }
     }
 }

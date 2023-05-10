@@ -21,7 +21,7 @@ using var host = Host.CreateDefaultBuilder(args)
     .Build();
 
 // Resolving phase of DI container for instantiating what we need.
-var consoleApp = host.Services.GetRequiredService<Crimson.CrimsonConsole>();
+var consoleApp = host.Services.GetRequiredService<Crimson.Core.Shared.CrimsonConsole>();
 
 // Entry point to application
 consoleApp.Run();

@@ -2,7 +2,7 @@ using static System.ConsoleColor;
 using System.Diagnostics;
 using Crimson.Core;
 
-namespace Crimson
+namespace Crimson.Core.Shared
 {
     public class CrimsonConsole
     {
@@ -48,7 +48,7 @@ namespace Crimson
                                 break;
                             case 2:
                                 Console.WriteLine($"You choose to load everything");
-                                _crimson.Run(string.Empty);
+                                _crimson.Run();
                                 break;
                         }
                         priceTimer.Stop();
