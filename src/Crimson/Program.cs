@@ -17,11 +17,12 @@ using var host = Host.CreateDefaultBuilder(args)
     .ConfigureServices((context, services) =>
     {
         services.AddCrimson();
+        services.AddTransient<Crimson.CrimsonConsole>();
     })
     .Build();
 
 // Resolving phase of DI container for instantiating what we need.
-var consoleApp = host.Services.GetRequiredService<Crimson.Core.Shared.CrimsonConsole>();
+var consoleApp = host.Services.GetRequiredService<Crimson.CrimsonConsole>();
 
 // Entry point to application
 consoleApp.Run();

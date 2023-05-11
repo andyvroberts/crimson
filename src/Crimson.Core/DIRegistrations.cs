@@ -10,8 +10,6 @@ public static class DIRegistrations
         services.AddSingleton<IExportStats, PostcodeFileStats>();
         services.AddTransient<ICrimson, PostcodesLoader>();
 
-        services.AddTransient<CrimsonConsole>();
-
         return services;
     }
 }

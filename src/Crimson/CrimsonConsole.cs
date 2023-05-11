@@ -2,7 +2,7 @@ using static System.ConsoleColor;
 using System.Diagnostics;
 using Crimson.Core;
 
-namespace Crimson.Core.Shared
+namespace Crimson
 {
     public class CrimsonConsole
     {
