@@ -15,7 +15,12 @@ public static class DIRegistrations
 
         if (options.EnableWebImporter)
         {
-            services.AddTransient<IPricesReader, WebFileReader>();
+            // AddHttpClient creates a Transient lifetime
+            services.AddHttpClient<IPricesReader, WebFileReader>()
+                .ConfigureHttpClient(cl =>
+                {
+                    cl.BaseAddress = new Uri("http://prod.publicdata.landregistry.gov.uk.s3-website-eu-west-1.amazonaws.com/");
+                });
         }
         else
         {
@@ -23,7 +28,7 @@ public static class DIRegistrations
         }
 
         services.AddOptions<CrimsonImportOptions>()
-            .Configure<IConfiguration>((opt, config) => 
+            .Configure<IConfiguration>((opt, config) =>
             {
                 config.GetSection("CrimsonImport").Bind(opt);
             });

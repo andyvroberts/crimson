@@ -7,14 +7,16 @@ namespace Crimson.Core.Import
     {
         private readonly IOptions<CrimsonImportOptions> _importOptions;
         private readonly IPricesParser _parser;
+        private HttpClient _client;
         private List<PriceRecord> _prices;
 
-        private static readonly HttpClient client = new();
+        //private static readonly HttpClient client = new();
 
-        public WebFileReader(IOptions<CrimsonImportOptions> importOptions, IPricesParser parser)
+        public WebFileReader(HttpClient httpClient, IOptions<CrimsonImportOptions> importOptions, IPricesParser parser)
         {
             _importOptions = importOptions;
             _parser = parser;
+            _client = httpClient;
             _prices = new();
         }
 
@@ -24,7 +26,7 @@ namespace Crimson.Core.Import
         public IEnumerable<PriceRecord> GetPrices()
         {
             // force GetAsync to be synchronous by using .Result
-            HttpResponseMessage response = client.GetAsync(_importOptions.Value.WebFileLocation).Result;
+            HttpResponseMessage response = _client.GetAsync(_importOptions.Value.WebFileLocation).Result;
             Stream csvData = response.Content.ReadAsStream();
 
             double? contentSize = (double?)response.Content.Headers.ContentLength / 1024 / 1024 / 1024;
@@ -66,7 +68,7 @@ namespace Crimson.Core.Import
         public IEnumerable<PriceRecord> GetPrices(string startsWith)
         {
             // force GetAsync to be synchronous by using .Result
-            HttpResponseMessage response = client.GetAsync(_importOptions.Value.WebFileLocation).Result;
+            HttpResponseMessage response = _client.GetAsync(_importOptions.Value.WebFileLocation).Result;
             Stream csvData = response.Content.ReadAsStream();
 
             double? contentSize = (double?)response.Content.Headers.ContentLength / 1024 / 1024 / 1024;
