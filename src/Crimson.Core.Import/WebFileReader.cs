@@ -22,15 +22,38 @@ namespace Crimson.Core.Import
 
         public async Task<IEnumerable<PriceRecord>> GetPricesAsync()
         {
-            HttpResponseMessage resp = await _client.GetAsync(_importOptions.Value.WebFileLocation);
-            resp.EnsureSuccessStatusCode();
+            int recCount = 0;
 
-            var fileData = await resp.Content.ReadAsStringAsync();
+            using (HttpResponseMessage resp = await _client.GetAsync(_importOptions.Value.WebFileLocation))
+            {
+                resp.EnsureSuccessStatusCode();
 
-            double? contentSize = (double?)resp.Content.Headers.ContentLength / 1024 / 1024 / 1024;
-            Console.WriteLine($"HTTP content size is {contentSize:F2} Gb.");
+                // var fileData = await resp.Content.ReadAsStreamAsync();
 
-            return _prices;
+                using (StreamReader reader = new(await resp.Content.ReadAsStreamAsync()))
+                {
+                    while (reader.Peek() > 0)
+                    {
+                        var line = await reader.ReadLineAsync();
+                        recCount++;
+
+                        if (line != null)
+                        {
+                            var nextPrice = _parser.ConvertCsvLine(line);
+
+                            if (nextPrice != null)
+                            {
+                                _prices.Add(nextPrice);
+                            }
+                        }
+                    }
+
+                    double? contentSize = (double?)resp.Content.Headers.ContentLength / 1024 / 1024 / 1024;
+                    Console.WriteLine($"HTTP content size is {contentSize:F2} Gb.");
+                }
+                Console.WriteLine($"Read {recCount} streamed records.");
+                return _prices;
+            }
         }
 
         /// <summary>
