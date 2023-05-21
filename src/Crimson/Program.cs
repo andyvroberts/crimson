@@ -25,4 +25,4 @@ using var host = Host.CreateDefaultBuilder(args)
 var consoleApp = host.Services.GetRequiredService<Crimson.CrimsonConsole>();
 
 // Entry point to application
-consoleApp.Run();
+await consoleApp.RunAsync();

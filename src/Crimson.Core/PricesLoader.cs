@@ -18,7 +18,7 @@ namespace Crimson.Core
             _scopeFactory = scopeFactory;
         }
 
-        public void Run()
+        public void Run(string startsWith)
         {
             var groupCount = 0;
             var recCount = 0;

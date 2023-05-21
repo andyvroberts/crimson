@@ -20,6 +20,19 @@ namespace Crimson.Core.Import
             _prices = new();
         }
 
+        public async Task<IEnumerable<PriceRecord>> GetPricesAsync()
+        {
+            HttpResponseMessage resp = await _client.GetAsync(_importOptions.Value.WebFileLocation);
+            resp.EnsureSuccessStatusCode();
+
+            var fileData = await resp.Content.ReadAsStringAsync();
+
+            double? contentSize = (double?)resp.Content.Headers.ContentLength / 1024 / 1024 / 1024;
+            Console.WriteLine($"HTTP content size is {contentSize:F2} Gb.");
+
+            return _prices;
+        }
+
         /// <summary>
         /// Open a UK Land Registry http file of property prices.
         /// </summary>

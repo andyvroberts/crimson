@@ -36,10 +36,10 @@ namespace Crimson.Core
             // Console.WriteLine($"Contained {recCount} total records.");
         }
 
-        public void Run()
+        public async Task RunAsync()
         {
-            _data = _reader.GetPrices();
-            GroupAndExport();
+            _data = await _reader.GetPricesAsync();
+            //GroupAndExport();
 
             // Console.WriteLine($"Executed {groupCount} Loops.");
             // Console.WriteLine($"Contained {recCount} total records.");

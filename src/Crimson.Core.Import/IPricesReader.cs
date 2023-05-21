@@ -12,5 +12,7 @@ namespace Crimson.Core.Import
         IEnumerable<PriceRecord> GetPrices();
 
         IEnumerable<PriceRecord> GetPrices(string startsWith);
+
+        Task<IEnumerable<PriceRecord>> GetPricesAsync();
     }
 }

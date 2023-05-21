@@ -7,7 +7,7 @@ namespace Crimson.Core
     /// </summary>
     public interface ICrimson
     {
-        void Run();
+        Task RunAsync();
 
         void Run(string scanValue);
     }

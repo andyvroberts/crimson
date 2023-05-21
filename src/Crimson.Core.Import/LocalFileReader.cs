@@ -16,6 +16,11 @@ namespace Crimson.Core.Import
             _prices = new();
         }
 
+        public async Task<IEnumerable<PriceRecord>> GetPricesAsync()
+        {
+            throw new NotImplementedException();
+        }
+
         /// <summary>
         /// Open a file on the local file system and read the property prices.
         /// The file to open has been downloaded from the UK Land Registry.

@@ -1,6 +1,7 @@
 using static System.ConsoleColor;
 using System.Diagnostics;
 using Crimson.Core;
+using Crimson;
 
 namespace Crimson
 {
@@ -14,7 +15,7 @@ namespace Crimson
             _crimson = crimson;
         }
 
-        public void Run()
+        public async Task RunAsync()
         {
             int actionChoice = 0;
             var lastTextColour = Console.ForegroundColor;
@@ -48,7 +49,7 @@ namespace Crimson
                                 break;
                             case 2:
                                 Console.WriteLine($"You choose to load everything");
-                                _crimson.Run();
+                                await _crimson.RunAsync();
                                 break;
                         }
                         priceTimer.Stop();
