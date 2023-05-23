@@ -8,15 +8,17 @@ namespace Crimson.Core.Import
         private readonly IOptions<CrimsonImportOptions> _importOptions;
         private readonly IPricesParser _parser;
         private List<PriceRecord> _prices;
+        private Dictionary<string, PriceSet> _priceSet;
 
         public LocalFileReader(IOptions<CrimsonImportOptions> importOptions, IPricesParser parser)
         {
             _importOptions = importOptions;
             _parser = parser;
             _prices = new();
+            _priceSet = new();
         }
 
-        public async Task<IEnumerable<PriceRecord>> GetPricesAsync()
+        public async Task<Dictionary<string, PriceSet>> GetPricesAsync()
         {
             throw new NotImplementedException();
         }

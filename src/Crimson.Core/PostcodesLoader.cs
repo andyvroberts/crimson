@@ -10,7 +10,7 @@ namespace Crimson.Core
         private readonly IPricesReader _reader;
         private readonly IExportStats _stats;
         private readonly IExporter _exporter;
-        private IEnumerable<PriceRecord>? _data;
+        private IEnumerable<PriceRecord>? _prices;
 
         public PostcodesLoader(IExporter exporter, IPricesReader reader, IExportStats stats)
         {
@@ -29,8 +29,8 @@ namespace Crimson.Core
         /// </param>
         public void Run(string scanValue)
         {
-            _data = _reader.GetPrices(scanValue);
-            GroupAndExport();
+            var _data = _reader.GetPrices(scanValue);
+            //GroupAndExport();
 
             // Console.WriteLine($"Executed {groupCount} Loops.");
             // Console.WriteLine($"Contained {recCount} total records.");
@@ -38,27 +38,27 @@ namespace Crimson.Core
 
         public async Task RunAsync()
         {
-            _data = await _reader.GetPricesAsync();
+            var _data = await _reader.GetPricesAsync();
             //GroupAndExport();
 
             // Console.WriteLine($"Executed {groupCount} Loops.");
-            // Console.WriteLine($"Contained {recCount} total records.");
+            Console.WriteLine($"Contained {_data.Count()} Postcode sets.");
         }
 
-        private void GroupAndExport()
-        {
-            var postcodeSet =
-                from p in _data
-                orderby p.Postcode, p.Date
-                group p by p.Postcode into pGroup
-                select pGroup;
+        // private void GroupAndExport()
+        // {
+        //     var postcodeSet =
+        //         from p in _data
+        //         orderby p.Postcode, p.Date
+        //         group p by p.Postcode into pGroup
+        //         select pGroup;
 
-            if (_data != null)
-                Console.WriteLine($"Found {_data.Count()} prices");
-            else
-                Console.WriteLine($"No prices found");
+        //     if (_data != null)
+        //         Console.WriteLine($"Found {_data.Count()} prices");
+        //     else
+        //         Console.WriteLine($"No prices found");
                 
-            _exporter.Export(postcodeSet);
-        }
+        //     _exporter.Export(postcodeSet);
+        // }
     }
 }

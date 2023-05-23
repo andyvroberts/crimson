@@ -1,5 +1,6 @@
 using Microsoft.Extensions.Options;
 using Crimson.Model;
+using System.Diagnostics;
 
 namespace Crimson.Core.Import
 {
@@ -9,6 +10,7 @@ namespace Crimson.Core.Import
         private readonly IPricesParser _parser;
         private HttpClient _client;
         private List<PriceRecord> _prices;
+        private Dictionary<string, PriceSet> _priceSet;
 
         //private static readonly HttpClient client = new();
 
@@ -18,9 +20,10 @@ namespace Crimson.Core.Import
             _parser = parser;
             _client = httpClient;
             _prices = new();
+            _priceSet = new();
         }
 
-        public async Task<IEnumerable<PriceRecord>> GetPricesAsync()
+        public async Task<Dictionary<string, PriceSet>> GetPricesAsync()
         {
             int recCount = 0;
 
@@ -29,6 +32,8 @@ namespace Crimson.Core.Import
                 resp.EnsureSuccessStatusCode();
 
                 // var fileData = await resp.Content.ReadAsStreamAsync();
+                Stopwatch loops = new();
+                loops.Start();
 
                 using (StreamReader reader = new(await resp.Content.ReadAsStreamAsync()))
                 {
@@ -43,18 +48,26 @@ namespace Crimson.Core.Import
 
                             if (nextPrice != null)
                             {
-                                _prices.Add(nextPrice);
+                                AddPriceToSet(nextPrice);
                             }
                         }
+
+                        if ((recCount % 100000) == 0)
+                        {
+                            Console.WriteLine($"Read count = {recCount} took {loops.Elapsed}");
+                            loops.Restart();
+                        }
+
                     }
 
                     double? contentSize = (double?)resp.Content.Headers.ContentLength / 1024 / 1024 / 1024;
                     Console.WriteLine($"HTTP content size is {contentSize:F2} Gb.");
                 }
                 Console.WriteLine($"Read {recCount} streamed records.");
-                return _prices;
+                return _priceSet;
             }
         }
+
 
         /// <summary>
         /// Open a UK Land Registry http file of property prices.
@@ -139,6 +152,28 @@ namespace Crimson.Core.Import
                 }
             }
             return _prices;
+        }
+
+        private void AddPriceToSet(PriceRecord nextPrice)
+        {
+            //var existingSet = _priceSet.ContainsKey(nextPrice.Postcode);
+
+            // PostcodeSet? existingPostcode = (
+            //     from p in _postcodes
+            //     where p.Postcode == nextPrice.Postcode
+            //     select p).FirstOrDefault();
+
+            if (_priceSet.ContainsKey(nextPrice.Postcode))
+            {
+                var existingSet = _priceSet[nextPrice.Postcode];
+                existingSet.AddPriceToSet(nextPrice);
+            }
+            else
+            {
+                var newSet = new PriceSet(nextPrice.Postcode);
+                newSet.AddPriceToSet(nextPrice);
+                _priceSet.Add(nextPrice.Postcode, newSet);
+            }
         }
 
     }

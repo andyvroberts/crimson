@@ -13,6 +13,6 @@ namespace Crimson.Core.Import
 
         IEnumerable<PriceRecord> GetPrices(string startsWith);
 
-        Task<IEnumerable<PriceRecord>> GetPricesAsync();
+        Task<Dictionary<string, PriceSet>> GetPricesAsync();
     }
 }

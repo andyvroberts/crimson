@@ -24,17 +24,32 @@ namespace Crimson.Model
 
     public class PropertyPrice
     {
-        public string Price { get; set; } = String.Empty;
-        public string PriceDate { get; set; } = String.Empty;
+        public string Price { get; }
+        public string PriceDate { get; }
+
+        public PropertyPrice(string price, string date)
+        {
+            Price = price;
+            PriceDate = date;
+        }
     }
 
     public class PropertyDetails
     {
-        public string Address { get; set; } = String.Empty;
-        public string Town { get; set; } = String.Empty;
-        public string Locality { get; set; } = String.Empty;
-        public string Flags { get; set; } = String.Empty;
-        public List<PropertyPrice> Prices { get; set; } = new();
+        public string Address { get; }
+        public string Town { get; }
+        public string Locality { get; }
+        public string Flags { get; } 
+        public List<PropertyPrice> Prices { get; set; }
+
+        public PropertyDetails(string address, string town, string locality, string flags)
+        {
+            Address = address;
+            Town = town;
+            Locality = locality;
+            Flags = flags;
+            Prices = new();
+        }
     }
 
     public class UkLandCsvRecord
