@@ -45,7 +45,7 @@ namespace Crimson
                         {
                             case 1:
                                 Console.WriteLine($"You choose to scan with a string");
-                                _crimson.Run(InputScanString());
+                                await _crimson.RunAsync(InputScanString());
                                 break;
                             case 2:
                                 Console.WriteLine($"You choose to load everything");

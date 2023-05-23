@@ -9,6 +9,6 @@ namespace Crimson.Core
     {
         Task RunAsync();
 
-        void Run(string scanValue);
+        Task RunAsync(string scanValue);
     }
 }

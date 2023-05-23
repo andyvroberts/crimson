@@ -23,6 +23,10 @@ namespace Crimson.Core.Import
             _priceSet = new();
         }
 
+
+        /// <summary>
+        /// Open a UK Land Registry http file of property prices.
+        /// </summary>
         public async Task<Dictionary<string, PriceSet>> GetPricesAsync()
         {
             int recCount = 0;
@@ -68,101 +72,57 @@ namespace Crimson.Core.Import
             }
         }
 
-
-        /// <summary>
-        /// Open a UK Land Registry http file of property prices.
-        /// </summary>
-        public IEnumerable<PriceRecord> GetPrices()
-        {
-            // force GetAsync to be synchronous by using .Result
-            HttpResponseMessage response = _client.GetAsync(_importOptions.Value.WebFileLocation).Result;
-            Stream csvData = response.Content.ReadAsStream();
-
-            double? contentSize = (double?)response.Content.Headers.ContentLength / 1024 / 1024 / 1024;
-            Console.WriteLine($"HTTP content size is {contentSize:F2} Gb.");
-            int recCount = 0;
-
-            using (StreamReader reader = new(csvData))
-            {
-                while (reader.Peek() > 0)
-                {
-                    var line = reader.ReadLine();
-                    recCount++;
-
-                    if (line != null)
-                    {
-                        var nextPrice = _parser.ConvertCsvLine(line);
-
-                        if (nextPrice != null)
-                        {
-                            _prices.Add(nextPrice);
-                        }
-                    }
-
-                    if ((recCount % 100000) == 0)
-                    {
-                        Console.WriteLine($"Read count = {recCount}.");
-                    }
-                }
-            }
-            return _prices;
-        }
-
         /// <summary>
         /// Open a UK Land Registry http file of property prices.
         /// </summary>
         /// <param name="startsWith">
         /// An optional StartsWith scan to restrict postcodes or outcodes.
         /// </param>
-        public IEnumerable<PriceRecord> GetPrices(string startsWith)
+        public async Task<Dictionary<string, PriceSet>> GetPricesAsync(string startsWith)
         {
-            // force GetAsync to be synchronous by using .Result
-            HttpResponseMessage response = _client.GetAsync(_importOptions.Value.WebFileLocation).Result;
-            Stream csvData = response.Content.ReadAsStream();
-
-            double? contentSize = (double?)response.Content.Headers.ContentLength / 1024 / 1024 / 1024;
-            Console.WriteLine($"HTTP content size is {contentSize:F2} Gb.");
             int recCount = 0;
 
-            using (StreamReader reader = new(csvData))
+            using (HttpResponseMessage resp = await _client.GetAsync(_importOptions.Value.WebFileLocation))
             {
-                while (reader.Peek() > 0)
+                resp.EnsureSuccessStatusCode();
+
+                // var fileData = await resp.Content.ReadAsStreamAsync();
+                Stopwatch loops = new();
+                loops.Start();
+
+                using (StreamReader reader = new(await resp.Content.ReadAsStreamAsync()))
                 {
-                    var line = reader.ReadLine();
-                    recCount++;
-
-                    if (line != null)
+                    while (reader.Peek() > 0)
                     {
-                        var nextPrice = _parser.ConvertCsvLine(line);
+                        var line = await reader.ReadLineAsync();
+                        recCount++;
 
-                        if (nextPrice != null)
+                        if (line != null)
                         {
-                            if (!string.IsNullOrEmpty(nextPrice.Outcode))
+                            var nextPrice = _parser.ConvertCsvLine(line);
+
+                            if (nextPrice != null)
                             {
-                                if (nextPrice.Outcode.StartsWith(startsWith.ToUpper()))
-                                    _prices.Add(nextPrice);
+                                if (!string.IsNullOrEmpty(nextPrice.Outcode))
+                                {
+                                    if (nextPrice.Outcode.StartsWith(startsWith.ToUpper()))
+                                        AddPriceToSet(nextPrice);
+                                }
                             }
                         }
                     }
 
-                    if ((recCount % 100000) == 0)
-                    {
-                        Console.WriteLine($"Read count = {recCount}.");
-                    }
+                    double? contentSize = (double?)resp.Content.Headers.ContentLength / 1024 / 1024 / 1024;
+                    Console.WriteLine($"HTTP content size is {contentSize:F2} Gb.");
                 }
+                Console.WriteLine($"Read {recCount} records.");
+                return _priceSet;
             }
-            return _prices;
         }
+
 
         private void AddPriceToSet(PriceRecord nextPrice)
         {
-            //var existingSet = _priceSet.ContainsKey(nextPrice.Postcode);
-
-            // PostcodeSet? existingPostcode = (
-            //     from p in _postcodes
-            //     where p.Postcode == nextPrice.Postcode
-            //     select p).FirstOrDefault();
-
             if (_priceSet.ContainsKey(nextPrice.Postcode))
             {
                 var existingSet = _priceSet[nextPrice.Postcode];

@@ -10,7 +10,6 @@ namespace Crimson.Core
         private readonly IPricesReader _reader;
         private readonly IExportStats _stats;
         private readonly IExporter _exporter;
-        private IEnumerable<PriceRecord>? _prices;
 
         public PostcodesLoader(IExporter exporter, IPricesReader reader, IExportStats stats)
         {
@@ -27,13 +26,13 @@ namespace Crimson.Core
         /// <param name="scanValue">
         /// An optional StartsWith scan to restrict postcodes or outcodes.
         /// </param>
-        public void Run(string scanValue)
+        public async Task RunAsync(string scanValue)
         {
-            var _data = _reader.GetPrices(scanValue);
+            var _data = await _reader.GetPricesAsync(scanValue);
             //GroupAndExport();
 
             // Console.WriteLine($"Executed {groupCount} Loops.");
-            // Console.WriteLine($"Contained {recCount} total records.");
+            Console.WriteLine($"Contained {_data.Count()} Postcode sets.");
         }
 
         public async Task RunAsync()

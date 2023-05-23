@@ -7,27 +7,20 @@ namespace Crimson.Core.Import
     {
         private readonly IOptions<CrimsonImportOptions> _importOptions;
         private readonly IPricesParser _parser;
-        private List<PriceRecord> _prices;
         private Dictionary<string, PriceSet> _priceSet;
 
         public LocalFileReader(IOptions<CrimsonImportOptions> importOptions, IPricesParser parser)
         {
             _importOptions = importOptions;
             _parser = parser;
-            _prices = new();
             _priceSet = new();
-        }
-
-        public async Task<Dictionary<string, PriceSet>> GetPricesAsync()
-        {
-            throw new NotImplementedException();
         }
 
         /// <summary>
         /// Open a file on the local file system and read the property prices.
         /// The file to open has been downloaded from the UK Land Registry.
         /// </summary>
-        public IEnumerable<PriceRecord> GetPrices()
+        public async Task<Dictionary<string, PriceSet>> GetPricesAsync()
         {
             string fullPath = ConstructPath();
             int recCount = 0;
@@ -38,7 +31,7 @@ namespace Crimson.Core.Import
                 {
                     while (reader.Peek() > 0)
                     {
-                        var line = reader.ReadLine();
+                        var line = await reader.ReadLineAsync();
                         recCount++;
 
                         if (line != null)
@@ -47,7 +40,7 @@ namespace Crimson.Core.Import
 
                             if (nextPrice != null)
                             {
-                                _prices.Add(nextPrice);
+                                AddPriceToSet(nextPrice);
                             }
 
                         }
@@ -60,7 +53,7 @@ namespace Crimson.Core.Import
                     }
                 }
             }
-            return _prices;
+            return _priceSet;
         }
 
         /// <summary>
@@ -70,7 +63,7 @@ namespace Crimson.Core.Import
         /// <param name="startsWith">
         /// An optional StartsWith scan to restrict postcodes or outcodes.
         /// </param>
-        public IEnumerable<PriceRecord> GetPrices(string startsWith)
+        public async Task<Dictionary<string, PriceSet>> GetPricesAsync(string startsWith)
         {
             string fullPath = ConstructPath();
             int recCount = 0;
@@ -81,7 +74,7 @@ namespace Crimson.Core.Import
                 {
                     while (reader.Peek() > 0)
                     {
-                        var line = reader.ReadLine();
+                        var line = await reader.ReadLineAsync();
                         recCount++;
 
                         if (line != null)
@@ -93,7 +86,7 @@ namespace Crimson.Core.Import
                                 if (!string.IsNullOrEmpty(nextPrice.Outcode))
                                 {
                                     if (nextPrice.Outcode.StartsWith(startsWith.ToUpper()))
-                                        _prices.Add(nextPrice);
+                                        AddPriceToSet(nextPrice);
                                 }
                             }
                         }
@@ -106,7 +99,7 @@ namespace Crimson.Core.Import
                     }
                 }
             }
-            return _prices;
+            return _priceSet;
         }
 
 
@@ -118,6 +111,22 @@ namespace Crimson.Core.Import
                 _importOptions.Value.LocalFileLocation, 
                 _importOptions.Value.LocalFileName);
             return fullPath;
+        }
+
+
+        private void AddPriceToSet(PriceRecord nextPrice)
+        {
+            if (_priceSet.ContainsKey(nextPrice.Postcode))
+            {
+                var existingSet = _priceSet[nextPrice.Postcode];
+                existingSet.AddPriceToSet(nextPrice);
+            }
+            else
+            {
+                var newSet = new PriceSet(nextPrice.Postcode);
+                newSet.AddPriceToSet(nextPrice);
+                _priceSet.Add(nextPrice.Postcode, newSet);
+            }
         }
 
     }

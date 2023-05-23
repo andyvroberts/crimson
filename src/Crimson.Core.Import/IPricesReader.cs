@@ -9,9 +9,7 @@ namespace Crimson.Core.Import
     /// </summary>
     public interface IPricesReader
     {
-        IEnumerable<PriceRecord> GetPrices();
-
-        IEnumerable<PriceRecord> GetPrices(string startsWith);
+        Task<Dictionary<string, PriceSet>> GetPricesAsync(string startsWith);
 
         Task<Dictionary<string, PriceSet>> GetPricesAsync();
     }
