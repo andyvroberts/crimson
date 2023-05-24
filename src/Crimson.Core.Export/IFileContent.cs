@@ -10,7 +10,7 @@ public interface IFileContent
 {
     MemoryStream PricesData { get; }
 
-    int EncodeToStream(IEnumerable<PriceRecord> prices);
+    int EncodeToStream(PriceSet prices);
 
     void Compress();
 

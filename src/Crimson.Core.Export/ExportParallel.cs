@@ -13,10 +13,10 @@ public class ExportParallel : IExporter
     }
 
 
-    public void Export(IEnumerable<IGrouping<string, PriceRecord>> priceData)
+    public void Export(Dictionary<string, PriceSet> priceData)
     {
         var groupCount = 0;
-        var recCount = 0;
+        var propertyCount = 0;
 
         if (priceData.Any())
         {
@@ -25,14 +25,13 @@ public class ExportParallel : IExporter
                 Parallel.ForEach(priceData, eachSet =>
                 {
                     Interlocked.Increment(ref groupCount);
-                    Interlocked.Add(ref recCount, eachSet.Count());
-                    // Console.WriteLine($"{eachSet.Key}: {eachSet.Count()}");
 
                     // use the Service Locator Pattern to add a different scope for each iteration.
                     using var scope = _scopeFactory.CreateScope();
                     var _writer = scope.ServiceProvider.GetRequiredService<IFileContent>();
 
-                    var priceCount = _writer.EncodeToStream(eachSet);
+                    var propCount = _writer.EncodeToStream(eachSet.Value);
+                    Interlocked.Add(ref propertyCount, propCount);
                     _writer.Compress();
                     var fileName = _writer.Write(eachSet.Key);
                     _writer.Dispose();

@@ -29,7 +29,16 @@ namespace Crimson.Core
         public async Task RunAsync(string scanValue)
         {
             var _data = await _reader.GetPricesAsync(scanValue);
+            _exporter.Export(_data);
             //GroupAndExport();
+            // foreach(PriceSet val in _data.Values)
+            // {
+            //     Console.WriteLine(val.SetValue);
+            //     foreach(var property in val.Properties)
+            //     {
+            //         Console.WriteLine(property.Address);
+            //     }
+            // }
 
             // Console.WriteLine($"Executed {groupCount} Loops.");
             Console.WriteLine($"Contained {_data.Count()} Postcode sets.");

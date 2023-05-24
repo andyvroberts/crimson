@@ -13,18 +13,24 @@ public class ExportSequential : IExporter
     }
 
 
-    public void Export(IEnumerable<IGrouping<string, PriceRecord>> priceData)
+    public void Export(Dictionary<string, PriceSet> priceData)
     {
-        foreach (IGrouping<string, PriceRecord> pg in priceData)
-        {
-            // use the Service Locator Pattern to add a different scope for each iteration.
-            using var scope = _scopeFactory.CreateScope();
-            var _writer = scope.ServiceProvider.GetRequiredService<IFileContent>();
+        int c1 = 0;
 
-            var priceCount = _writer.EncodeToStream(pg);
-            _writer.Compress();
-            var fileName = _writer.Write(pg.Key);
-            _writer.Dispose();
+        foreach (var ps in priceData)
+        {
+            if (c1 == 0)
+            {
+                // use the Service Locator Pattern to add a different scope for each iteration.
+                using var scope = _scopeFactory.CreateScope();
+                var _writer = scope.ServiceProvider.GetRequiredService<IFileContent>();
+
+                var priceCount = _writer.EncodeToStream(ps.Value);
+                _writer.Compress();
+                var fileName = _writer.Write(ps.Key);
+                _writer.Dispose();
+            }
+            c1++;
 
             //_stats.AddPostcodeStat(pg.Key, fileName, priceCount);
         }

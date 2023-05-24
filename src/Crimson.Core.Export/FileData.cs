@@ -1,3 +1,4 @@
+using System.Text.Json;
 using Crimson.Model;
 using System.Text;
 
@@ -22,25 +23,26 @@ public class FileData : IFileContent
         pricesData = new();
     }
 
-    public int EncodeToStream(IEnumerable<PriceRecord> prices)
+    public int EncodeToStream(PriceSet prices)
     {
         ReadOnlySpan<byte> line = new();
-        var pCount = prices.Count();
-        int pLoop = 1;
+        var pCount = prices.Properties.Count();
 
-        foreach (PriceRecord pr in prices)
-        {
-            if (pLoop == pCount)
-                line = _coding.GetBytes(pr.ToString());
-            else
-                line = _coding.GetBytes(pr.ToString() + Environment.NewLine);
+        string temp = JsonSerializer.Serialize<PriceSet>(prices);
+        line = _coding.GetBytes(JsonSerializer.Serialize<PriceSet>(prices));
+        Console.WriteLine(temp);
 
-            pricesData.Write(line);
-            pLoop += 1;
-        }
+        // foreach (PropertyDetails pd in prices.Properties)
+        // {
+        //     string temp = JsonSerializer.Serialize<PropertyDetails>(pd);
+        //     line = _coding.GetBytes(JsonSerializer.Serialize<PropertyDetails>(pd));
+        //     Console.WriteLine(temp);
+
+        //     pricesData.Write(line);
+        // }
         // Console.WriteLine($"Data size = {pricesData.Length}");
         pricesData.Position = 0;
-        return pLoop;
+        return pCount;
     }
 
     public void Compress()
