@@ -18,27 +18,10 @@ namespace Crimson.Core
             _exporter = exporter;
         }
 
-        /// <summary>
-        /// Read the property prices.
-        /// Group price records by Postcode.
-        /// Export a file for each set of Postcode records.
-        /// </summary>
-        /// <param name="scanValue">
-        /// An optional StartsWith scan to restrict postcodes or outcodes.
-        /// </param>
         public async Task RunAsync(string scanValue)
         {
             var _data = await _reader.GetPricesAsync(scanValue);
             _exporter.Export(_data);
-            //GroupAndExport();
-            // foreach(PriceSet val in _data.Values)
-            // {
-            //     Console.WriteLine(val.SetValue);
-            //     foreach(var property in val.Properties)
-            //     {
-            //         Console.WriteLine(property.Address);
-            //     }
-            // }
 
             // Console.WriteLine($"Executed {groupCount} Loops.");
             Console.WriteLine($"Contained {_data.Count()} Postcode sets.");
@@ -47,26 +30,10 @@ namespace Crimson.Core
         public async Task RunAsync()
         {
             var _data = await _reader.GetPricesAsync();
-            //GroupAndExport();
 
             // Console.WriteLine($"Executed {groupCount} Loops.");
             Console.WriteLine($"Contained {_data.Count()} Postcode sets.");
         }
 
-        // private void GroupAndExport()
-        // {
-        //     var postcodeSet =
-        //         from p in _data
-        //         orderby p.Postcode, p.Date
-        //         group p by p.Postcode into pGroup
-        //         select pGroup;
-
-        //     if (_data != null)
-        //         Console.WriteLine($"Found {_data.Count()} prices");
-        //     else
-        //         Console.WriteLine($"No prices found");
-                
-        //     _exporter.Export(postcodeSet);
-        // }
     }
 }

@@ -19,8 +19,8 @@ public class ExportSequential : IExporter
 
         foreach (var ps in priceData)
         {
-            if (c1 == 0)
-            {
+            // if (c1 == 0)
+            // {
                 // use the Service Locator Pattern to add a different scope for each iteration.
                 using var scope = _scopeFactory.CreateScope();
                 var _writer = scope.ServiceProvider.GetRequiredService<IFileContent>();
@@ -29,7 +29,7 @@ public class ExportSequential : IExporter
                 _writer.Compress();
                 var fileName = _writer.Write(ps.Key);
                 _writer.Dispose();
-            }
+            // }
             c1++;
 
             //_stats.AddPostcodeStat(pg.Key, fileName, priceCount);

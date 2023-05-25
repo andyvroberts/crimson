@@ -26,23 +26,13 @@ public class FileData : IFileContent
     public int EncodeToStream(PriceSet prices)
     {
         ReadOnlySpan<byte> line = new();
-        var pCount = prices.Properties.Count();
 
-        string temp = JsonSerializer.Serialize<PriceSet>(prices);
+        // string temp = JsonSerializer.Serialize<PriceSet>(prices);
         line = _coding.GetBytes(JsonSerializer.Serialize<PriceSet>(prices));
-        Console.WriteLine(temp);
+        pricesData.Write(line);
 
-        // foreach (PropertyDetails pd in prices.Properties)
-        // {
-        //     string temp = JsonSerializer.Serialize<PropertyDetails>(pd);
-        //     line = _coding.GetBytes(JsonSerializer.Serialize<PropertyDetails>(pd));
-        //     Console.WriteLine(temp);
-
-        //     pricesData.Write(line);
-        // }
-        // Console.WriteLine($"Data size = {pricesData.Length}");
         pricesData.Position = 0;
-        return pCount;
+        return prices.Properties.Count();
     }
 
     public void Compress()

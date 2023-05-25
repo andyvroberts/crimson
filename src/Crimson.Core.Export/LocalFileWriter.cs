@@ -21,7 +21,7 @@ public class LocalFileWriter : IFileWriter
         {
             data.CopyTo(fileData);
         }
-        Console.WriteLine($"Created file {fullName}.");
+        // Console.WriteLine($"Created file {fullName}.");
         return fullName;
     }
 }
