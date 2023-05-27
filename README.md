@@ -57,8 +57,7 @@ dotnet add Crimson/Crimson.csproj reference Crimson.CompRoot/Crimson.CompRoot.cs
 
 To delete a large number of files on Linux (in case you have the 'too many args' issue) try this.
 ```
-find . -name "*.dat.gz" -print0 | xargs -0 rm
+find . -name "*.json.gz" -print0 | xargs -0 rm
 ```
-
 
 

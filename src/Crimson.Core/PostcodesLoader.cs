@@ -30,6 +30,7 @@ namespace Crimson.Core
         public async Task RunAsync()
         {
             var _data = await _reader.GetPricesAsync();
+            _exporter.Export(_data);
 
             // Console.WriteLine($"Executed {groupCount} Loops.");
             Console.WriteLine($"Contained {_data.Count()} Postcode sets.");
