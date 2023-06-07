@@ -3,7 +3,7 @@ namespace Crimson.Model;
 public class PriceSet
 {
     public string SetValue { get; set; }
-    public List<PropertyDetails> Properties { get; }
+    public Dictionary<string, PropertyDetails> Properties { get; }
 
     public PriceSet (string setValue)
     {
@@ -13,10 +13,11 @@ public class PriceSet
 
     public void AddPriceToSet(PriceRecord rec)
     {
-        var existingProp = Properties.SingleOrDefault(x => x.Address == rec.Address);
+        //var existingProp = Properties.SingleOrDefault(x => x.Address == rec.Address);
 
-        if (existingProp != null)
+        if (Properties.ContainsKey(rec.Address))
         {
+            var existingProp = Properties[rec.Address];
             PropertyPrice newPrice = new PropertyPrice(rec.Price, rec.Date);
 
             existingProp.Prices.Add(newPrice);
@@ -33,7 +34,7 @@ public class PriceSet
             PropertyPrice newPrice = new PropertyPrice(rec.Price, rec.Date);
             newProp.Prices.Add(newPrice);
 
-            Properties.Add(newProp);
+            Properties.Add(rec.Address, newProp);
         }
     }
 }
