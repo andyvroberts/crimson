@@ -1,3 +1,4 @@
+using System.Text.Json.Serialization; 
 
 namespace Crimson.Model
 {
@@ -24,7 +25,9 @@ namespace Crimson.Model
 
     public class PropertyPrice
     {
+        [JsonPropertyName("pr")]
         public string Price { get; }
+        [JsonPropertyName("pd")]
         public string PriceDate { get; }
 
         public PropertyPrice(string price, string date)
@@ -36,10 +39,16 @@ namespace Crimson.Model
 
     public class PropertyDetails
     {
+        [JsonIgnore]
         public string Address { get; }
+        [JsonPropertyName("at")]
         public string Town { get; }
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
+        [JsonPropertyName("al")]
         public string Locality { get; }
+        [JsonPropertyName("af")]
         public string Flags { get; } 
+        [JsonPropertyName("ap")]
         public List<PropertyPrice> Prices { get; set; }
 
         public PropertyDetails(string address, string town, string locality, string flags)

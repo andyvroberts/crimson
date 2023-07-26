@@ -1,7 +1,10 @@
+using System.Text.Json.Serialization;
+
 namespace Crimson.Model;
 
 public class PriceSet
 {
+    [JsonIgnore]
     public string SetValue { get; set; }
     public Dictionary<string, PropertyDetails> Properties { get; }
 
