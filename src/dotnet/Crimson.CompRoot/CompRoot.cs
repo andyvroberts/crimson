@@ -15,8 +15,10 @@ namespace Crimson.CompRoot
         /// </summary>
         public static IServiceCollection AddCrimson(this IServiceCollection services)
         {
-            services.AddCrimsonImport(o => o.EnableWebImporter = false);
-            services.AddCrimsonExport(o => o.EnableParallelExport = true);
+            services.AddCrimsonImport(o => o.EnableWebImporter = true);
+            services.AddCrimsonExport(
+                o => o.EnableParallelExport = true,
+                o => o.CompressionType = CrimsonExportOptions.Compression.None);
             services.AddCrimsonCore();
 
             return services;

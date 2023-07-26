@@ -1,8 +1,6 @@
-using System.IO.Compression;
-
 namespace Crimson.Core.Export;
 
-public class GzipCompress : ICompression
+public class NoCompress : ICompression
 {
     private MemoryStream compressedData;
     public MemoryStream CompressedData
@@ -15,19 +13,16 @@ public class GzipCompress : ICompression
     {
         get { return compressionExtension; }
     }
-    
-    public GzipCompress()
+
+    public NoCompress()
     {
         compressedData = new();
-        compressionExtension = ".gz";
+        compressionExtension = string.Empty;
     }
 
     public void Compress(MemoryStream data)
     {
-        using (GZipStream gZip = new GZipStream(compressedData, CompressionMode.Compress, true))
-        {
-            data.CopyTo(gZip);
-        }
+        data.CopyTo(compressedData);
         compressedData.Position = 0;
     }
 

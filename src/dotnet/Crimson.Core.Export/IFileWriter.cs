@@ -7,5 +7,5 @@ namespace Crimson.Core.Export;
 /// </summary>
 public interface IFileWriter
 {
-    string SaveFile(MemoryStream data, string fileName);
+    string SaveFile(MemoryStream data, string compressionExtension, string fileName);
 }

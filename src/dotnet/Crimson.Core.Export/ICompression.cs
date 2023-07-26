@@ -8,6 +8,8 @@ public interface ICompression
 {
     MemoryStream CompressedData { get; }
 
+    string CompressionExtension { get; }
+
     void Compress(MemoryStream data);
 
     void Dispose();

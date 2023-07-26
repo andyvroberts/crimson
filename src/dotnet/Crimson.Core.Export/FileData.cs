@@ -44,7 +44,7 @@ public class FileData : IFileContent
 
     public string Write(string fileName)
     {
-        fileName = _writer.SaveFile(_compressor.CompressedData, fileName);
+        fileName = _writer.SaveFile(_compressor.CompressedData, _compressor.CompressionExtension, fileName);
         return fileName;
     }
 
