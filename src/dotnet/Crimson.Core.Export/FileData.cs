@@ -28,8 +28,21 @@ public class FileData : IFileContent
         ReadOnlySpan<byte> line = new();
 
         // string temp = JsonSerializer.Serialize<PriceSet>(prices);
-        line = _coding.GetBytes(JsonSerializer.Serialize<PriceSet>(prices));
-        pricesData.Write(line);
+        // line = _coding.GetBytes(JsonSerializer.Serialize<PriceSet>(prices));
+        // pricesData.Write(line);
+
+        foreach(PropertyDetails pd in prices.Properties.Values)
+        {
+
+            line = _coding.GetBytes(pd.PropertyRow() + Environment.NewLine);
+            pricesData.Write(line);
+
+            foreach(PropertyPrice pr in pd.Prices)
+            {
+                line = _coding.GetBytes(pr.PriceRow() + Environment.NewLine);
+                pricesData.Write(line);
+            }
+        }
 
         pricesData.Position = 0;
         return prices.Properties.Count();

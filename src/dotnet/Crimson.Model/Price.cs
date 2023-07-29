@@ -35,6 +35,11 @@ namespace Crimson.Model
             Price = price;
             PriceDate = date;
         }
+
+        public string PriceRow()
+        {
+            return $"2|{PriceDate}|{Price}";
+        }
     }
 
     public class PropertyDetails
@@ -58,6 +63,11 @@ namespace Crimson.Model
             Locality = locality;
             Flags = flags;
             Prices = new();
+        }
+
+        public string PropertyRow()
+        {
+            return $"1|{Address}|{Town}|{Locality}|{Flags}";
         }
     }
 
