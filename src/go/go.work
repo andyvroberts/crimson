@@ -2,3 +2,4 @@ go 1.20
 
 use ./reader
 use ./server
+use ./temp

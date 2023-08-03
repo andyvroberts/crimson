@@ -1,12 +1,11 @@
 package main
 
 import (
-	"net/http"
-
-	"crimson.server/handlers"
+	temp "crimson.temp"
 )
 
 func main() {
-	http.HandleFunc("/ukprop/pc/", handlers.PostcodeHandler)
-	http.ListenAndServe(":5000", nil)
+	temp.ReadFile("MK179AU")
+	// http.HandleFunc("/ukprop/pc/", handlers.PostcodeHandler)
+	// http.ListenAndServe(":5000", nil)
 }
