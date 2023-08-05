@@ -1,11 +1,17 @@
 package main
 
 import (
+	"fmt"
+
 	temp "crimson.temp"
 )
 
 func main() {
-	temp.ReadFile("MK179AU")
+	props := temp.ReadFile("MK179QY")
+	for _, p := range props {
+		fmt.Println(p.Address)
+	}
+
 	// http.HandleFunc("/ukprop/pc/", handlers.PostcodeHandler)
 	// http.ListenAndServe(":5000", nil)
 }

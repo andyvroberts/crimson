@@ -3,6 +3,7 @@ package temp
 import (
 	"bufio"
 	"fmt"
+	"io"
 	"log"
 	"os"
 	"strings"
@@ -10,11 +11,11 @@ import (
 	"crimson.server/models"
 )
 
-func ReadFile2(pc string) (props []models.PropertyDetails) {
+func ReadFile(pc string) (props []models.PropertyDetails) {
 	//func readPostcodeFile(pc string) (props string, err error) {
 	//var postcodes []models.PropertyDetails
 	const (
-		fileExtension string = ".json"
+		fileExtension string = ".dat"
 	)
 
 	path, err := os.UserHomeDir()
@@ -31,30 +32,47 @@ func ReadFile2(pc string) (props []models.PropertyDetails) {
 	}
 
 	reader := bufio.NewScanner(f)
+	reader.Split(bufio.ScanLines)
+	var pr models.PropertyDetails
+	var prvt string
+	prvt = "0"
 
 	for reader.Scan() {
-		//fmt.Println(reader.Text())
-		var columns []string = strings.Split(reader.Text(), "|")
-		fmt.Println(columns[0])
+		line := reader.Text()
+		fmt.Println(line)
+		columns := strings.Split(line, "|")
 
 		switch columns[0] {
 		case "1":
-			x := models.NewPropertyDetails(columns[1], columns[2], columns[3], columns[4])
-			fmt.Println(columns[1])
-			fmt.Println(x.Address)
+			{
+				fmt.Println("CASE == 1")
+				if prvt == "2" {
+					props = append(props, pr)
+				}
+				pr = models.NewPropertyDetails(columns[1], columns[2], columns[3], columns[4])
+			}
 		case "2":
-			y := models.NewPropertyPrice(columns[1], columns[2])
-			fmt.Println(y.Date)
+			{
+				fmt.Println("CASE == 2")
+				pr.Prices = append(pr.Prices, models.NewPropertyPrice(columns[1], columns[2]))
+			}
+			// default:
+			// 	{
+			// 		fmt.Println("No record type")
+			// 	}
 		}
+		prvt = columns[0]
 	}
+	props = append(props, pr)
+
 	return
 }
 
-func ReadFile(pc string) (props []models.PropertyDetails) {
+func ReadFile2(pc string) (props []models.PropertyDetails) {
 	//func readPostcodeFile(pc string) (props string, err error) {
 	//var postcodes []models.PropertyDetails
 	const (
-		fileExtension string = ".json"
+		fileExtension string = ".dat"
 	)
 
 	path, err := os.UserHomeDir()
@@ -73,14 +91,46 @@ func ReadFile(pc string) (props []models.PropertyDetails) {
 	reader := bufio.NewReader(f)
 	var readErr error = nil
 
-	for readErr == nil {
-		token, err := reader.ReadString('|')
+	// for readErr == nil {
+	// 	token, err := reader.ReadString('#')
 
-		if err == nil {
-			fmt.Println(token)
-		} else {
-			fmt.Println(token)
-			readErr = err
+	// 	fmt.Println(token)
+	// 	readErr = err
+	// }
+
+	for readErr == nil {
+		content, _, e := reader.ReadLine()
+		var cols []string
+
+		// for _, val := range content {
+		// 	fmt.Print(string(val))
+		// }
+
+		if len(content) > 1 {
+			line := string(content[:])
+			cols = strings.Split(line, "|")
+
+			recType := cols[0]
+
+			for i, c := range strings.Split(line, "|") {
+				fmt.Println(i, c)
+			}
+
+			switch {
+			case recType == "1":
+				fmt.Println("line is type 1")
+			case recType == "2":
+				fmt.Println("line is type 2")
+			default:
+				fmt.Println("Unknown:", recType)
+			}
+
+			//fmt.Println(cols[0])
+		}
+		readErr = e
+
+		if e == io.EOF {
+			fmt.Println("EOF")
 		}
 	}
 	return

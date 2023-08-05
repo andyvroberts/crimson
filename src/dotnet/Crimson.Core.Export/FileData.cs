@@ -8,7 +8,7 @@ public class FileData : IFileContent
 {
     private readonly ICompression _compressor;
     private readonly IFileWriter _writer;
-    private readonly UnicodeEncoding _coding = new();
+    private readonly UTF8Encoding _coding = new();
 
     private MemoryStream pricesData;
     public MemoryStream PricesData
