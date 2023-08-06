@@ -6,7 +6,6 @@ type PropertyPrice struct {
 }
 
 type PropertyDetails struct {
-	Postcode string          `json:"postcode"`
 	Address  string          `json:"address"`
 	Town     string          `json:"town"`
 	Locality string          `json:"locality,omitempty"`

@@ -3,6 +3,7 @@ package handlers
 import (
 	"bufio"
 	"encoding/json"
+	"fmt"
 	"log"
 	"net/http"
 	"os"
@@ -19,27 +20,10 @@ func PostcodeHandler(w http.ResponseWriter, r *http.Request) {
 		postCodeNoSpaces := strings.Replace(urlPostCode, " ", "", -1)
 		postCode := strings.ToUpper(postCodeNoSpaces)
 
-		// pr1 := &models.PropertyPrice{
-		// 	Date:  "2020-01-23",
-		// 	Price: "345000",
-		// }
-		// pr2 := &models.PropertyPrice{
-		// 	Date:  "2022-06-29",
-		// 	Price: "550000",
-		// }
-		// prices := []models.PropertyPrice{*pr1, *pr2}
-
-		// ukprop := &models.PropertyDetails{
-		// 	Postcode: "BR7 5LN",
-		// 	Address:  "45 Logs Hill",
-		// 	Town:     "Chislehurst",
-		// 	Flags:    "FNS",
-		// 	Prices:   prices,
-		// }
-		ukProps := readPostcodeFile(postCode)
-		// if err != nil {
-		// 	log.Fatal(err)
-		// }
+		ukProps, err := readPostcodeFile(postCode)
+		if err != nil {
+			log.Fatal(err)
+		}
 
 		ukpropJson, err := json.Marshal(ukProps)
 		if err != nil {
@@ -47,7 +31,6 @@ func PostcodeHandler(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 		w.Header().Set("Content-Type", "application/json")
-		//w.Write([]byte(postCode))
 		w.Write(ukpropJson)
 
 	case http.MethodPost:
@@ -56,16 +39,14 @@ func PostcodeHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func readPostcodeFile(pc string) (props []models.PropertyDetails) {
-	//func readPostcodeFile(pc string) (props string, err error) {
-	//var postcodes []models.PropertyDetails
+func readPostcodeFile(pc string) (props []models.PropertyDetails, readError error) {
 	const (
-		fileExtension string = ".json"
+		fileExtension string = ".dat"
 	)
 
 	path, err := os.UserHomeDir()
 	if err != nil {
-		log.Fatal(err)
+		return nil, err
 	}
 
 	filePath := path + string(os.PathSeparator) + "downloads" + string(os.PathSeparator) + "postcodes" + string(os.PathSeparator)
@@ -73,31 +54,37 @@ func readPostcodeFile(pc string) (props []models.PropertyDetails) {
 
 	f, err := os.Open(fileLoc)
 	if err != nil {
-		log.Fatal(err)
+		return nil, err
 	}
 
 	reader := bufio.NewScanner(f)
-	aProp := new(models.PropertyDetails)
-	var prevRecType string
+	reader.Split(bufio.ScanLines)
+
+	var pr models.PropertyDetails
+	var prvt string
+	prvt = "0"
 
 	for reader.Scan() {
-		var columns []string = strings.Split(reader.Text(), "|")
+		line := reader.Text()
+		fmt.Println(line)
+		columns := strings.Split(line, "|")
 
 		switch columns[0] {
 		case "1":
-			if prevRecType == "2" {
-				props = append(props, *aProp)
+			{
+				if prvt == "2" {
+					props = append(props, pr)
+				}
+				pr = models.NewPropertyDetails(columns[1], columns[2], columns[3], columns[4])
 			}
-			aProp.Address = columns[1]
-			aProp.Town = columns[2]
-			aProp.Locality = columns[3]
-			aProp.Flags = columns[4]
 		case "2":
-			aPrice := models.PropertyPrice{Date: columns[1], Price: columns[2]}
-			aProp.Prices = append(aProp.Prices, aPrice)
+			{
+				pr.Prices = append(pr.Prices, models.NewPropertyPrice(columns[1], columns[2]))
+			}
 		}
-		prevRecType = columns[0]
+		prvt = columns[0]
 	}
+	props = append(props, pr)
 
 	return
 }
