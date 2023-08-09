@@ -6,12 +6,9 @@ import (
 	"crimson.server/handlers"
 )
 
-func main() {
-	// props := temp.ReadFile("MK179QY")
-	// for _, p := range props {
-	// 	fmt.Println(p.Address)
-	// }
+const apiBasePath = "/ukprop"
 
-	http.HandleFunc("/ukprop/pc/", handlers.PostcodeHandler)
+func main() {
+	handlers.SetupRoutes(apiBasePath)
 	http.ListenAndServe(":5000", nil)
 }

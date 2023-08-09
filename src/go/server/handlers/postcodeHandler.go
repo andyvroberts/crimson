@@ -9,15 +9,29 @@ import (
 	"os"
 	"strings"
 
+	"crimson.server/cors"
 	"crimson.server/models"
 )
 
-func PostcodeHandler(w http.ResponseWriter, r *http.Request) {
+const postcodePath = "pc"
+
+func SetupRoutes(apiBase string) {
+	// define our postcode hander func as a variable that can be passed.
+	intendedHandler := http.HandlerFunc(postcodeHandler)
+	// pass in the postcode function to the middleware.
+	http.Handle(fmt.Sprintf("%s/%s/", apiBase, postcodePath), cors.Middleware(intendedHandler))
+}
+
+func postcodeHandler(w http.ResponseWriter, r *http.Request) {
+	urlSegments := strings.Split(r.URL.Path, fmt.Sprintf("%s/", postcodePath))
+	urlPc := urlSegments[len(urlSegments)-1]
+	fmt.Println(urlPc)
+
 	switch r.Method {
 
 	case http.MethodGet:
-		urlPostCode := strings.SplitAfter(r.URL.Path, "pc/")[1]
-		postCodeNoSpaces := strings.Replace(urlPostCode, " ", "", -1)
+		//urlPostCode := strings.SplitAfter(r.URL.Path, "pc/")[1]
+		postCodeNoSpaces := strings.Replace(urlPc, " ", "", -1)
 		postCode := strings.ToUpper(postCodeNoSpaces)
 
 		ukProps, err := readPostcodeFile(postCode)
@@ -35,6 +49,9 @@ func PostcodeHandler(w http.ResponseWriter, r *http.Request) {
 
 	case http.MethodPost:
 		w.WriteHeader(http.StatusBadRequest)
+		return
+
+	case http.MethodOptions:
 		return
 	}
 }
@@ -56,6 +73,7 @@ func readPostcodeFile(pc string) (props []models.PropertyDetails, readError erro
 	if err != nil {
 		return nil, err
 	}
+	defer f.Close()
 
 	reader := bufio.NewScanner(f)
 	reader.Split(bufio.ScanLines)
@@ -66,7 +84,7 @@ func readPostcodeFile(pc string) (props []models.PropertyDetails, readError erro
 
 	for reader.Scan() {
 		line := reader.Text()
-		fmt.Println(line)
+		//fmt.Println(line)
 		columns := strings.Split(line, "|")
 
 		switch columns[0] {
