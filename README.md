@@ -60,57 +60,8 @@ To delete a large number of files on Linux (in case you have the 'too many args'
 find . -name "*.json.gz" -print0 | xargs -0 rm
 ```
 
-## MySql
-https://dev.mysql.com/doc/mysql-apt-repo-quick-guide/en/#apt-repo-fresh-install  
-
-First download the APT repo.  
-https://dev.mysql.com/downloads/repo/apt/  
-
-At this time, we have mysql-apt-config_0.8.26-1_all.deb.  So Install this.  
-```
-sudo dpkg -i ~/downloads/mysql-apt-config_0.8.26-1_all.deb
-```
-
-Run the APT commands.  
-```
-sudo apt-get update
-sudo apt-get install mysql-server
-```
-
-This results in an install of 8.0.34 community server.  Some commands are:  
-```
-systemctl status mysql
-systemctl start mysql
-systemctl stop mysql
-```
-
-### Activate systemctl in WSL
-As long as you are on WSL2 you can modify the WSL config for systemd support.  
-
-edit or create the /etc/wsl.conf file and ensure this setting exists:  
-```
-[boot]
-systemd=true
-```
-Once that is done, close your WSL distro Windows and run shutdown from PowerShell to restart your WSL instances.  
-```
-wsl.exe --shutdown
-```
-You can now restart WSL Debian and run systemctl commands.
-
-https://dev.mysql.com/doc/refman/8.0/en/using-systemd.html  
-To change the MySql configuration for systemctl startup commands (that use systemd), run the following:  
-```
-sudo systemctl edit mysql
-```
-MySql config options can be found here https://dev.mysql.com/doc/refman/8.0/en/server-system-variables.html  
 
 
-### Create A Database
-To connect to MySql for the first time, logon as root:  
-```
-mysql -u root -p
-```
 
 
 
