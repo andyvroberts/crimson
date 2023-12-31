@@ -116,8 +116,25 @@ Then run the CSV load, after which you can view some records:
 SELECT * FROM pp_load LIMIT 3\G
 ```
 
-## Create the 
+## Create the Data Tables
+There needs to be two data tables.  
+1. A postcode table, where each postcode acts as a partition key.
+2. A price table, where each price has an FK to its postcode.
 
+Later on, when the prices are processed, the driving dataset will be the postcode table.  The tables are organised so that after each postcode is successfuly processed, a delete of that postcode will (cascade) delete all the associated price records so they cannot be accidentally re-processed.  
+
+[Create the Postcode & Price data tables](src/database/03-data-tables.sql).  
+
+## Loading Table to Data Tables
+Use a MySql stored procedure to copy the data from the loaded CSV records and transform them into Price and Postcode data tables.  
+
+[Create the stored procedure to load the distinct postcodes](/src/database/04-insert-postcode-table.sql).  
+
+Execute the stored procedures in MySql, in the correct sequence.  
+```
+CALL postcodes();
+
+```
 
 
 
