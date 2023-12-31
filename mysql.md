@@ -102,11 +102,11 @@ In order to use local files, you must do two actions.
 ```
 SET GLOBAL local_infile=1;
 ```
-The result of this can be seen by running: 
+The result of this can be seen by running:  
 ```
 SHOW GLOBAL VARIABLES LIKE 'local_infile';
 ```
-2. Connect to MySql using the local infile switch:
+2. Connect to MySql using the local infile switch:  
 ```
 mysql --local-infile=1 -u ppdev -p
 use pricespaid;
@@ -128,16 +128,23 @@ Later on, when the prices are processed, the driving dataset will be the postcod
 ## Loading Table to Data Tables
 Use a MySql stored procedure to copy the data from the loaded CSV records and transform them into Price and Postcode data tables.  
 
-[Create the stored procedure to load the distinct postcodes](/src/database/04-insert-postcode-table.sql).  
+[Create the stored procedure to load the distinct postcodes](/src/database/04-insert-postcode-table.sql).   
+[Create the stored procedure to load the property prices](/src/database//05-insert-price-table.sql).    
 
 Execute the stored procedures in MySql, in the correct sequence.  
 ```
-CALL postcodes();
+CALL postcodes;
+CALL prices;
+```
+Unfortunately, the prices paid CSV can have duplicate records.  These records are exact duplicates in every column value apart from the record key (guid).  In some cases there can be more than one duplicate of the same record.  
 
+[Create the stored procedure to deduplicate price records](/src/database//06-delete-duplicates.sql).
+```
+CALL deduplicate;
 ```
 
 
-
+### MySqls
 Some useful statements:  
 ```
 SELECT table_name FROM information_schema.tables;
@@ -146,5 +153,4 @@ select * from information_schema.tables where table_name = 'test1'\G
 
 select * from information_schema.table_privileges where table_name = 'test1'\G
 ```
-
 
