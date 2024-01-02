@@ -2,13 +2,13 @@ delimiter //
 CREATE PROCEDURE deduplicate()
 BEGIN
     WITH 
-    dupes AS -- get the keys that have duplicates.
+    dupes AS -- get duplicate business keys.
     (
         SELECT partitionkey, rowkey
         FROM price
         GROUP BY partitionkey, rowkey HAVING COUNT(*) > 1
     ),
-    rownums AS -- get the id's of all the duplicate records
+    rownums AS -- get the id's of all the duplicates
     (
         SELECT 
             p.partitionkey, p.rowkey, p.id,

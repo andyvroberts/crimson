@@ -143,6 +143,46 @@ Unfortunately, the prices paid CSV can have duplicate records.  These records ar
 CALL deduplicate;
 ```
 
+## Setup for Export of Postcode Files
+First, the ppdev user must have the FILE privilege in order to export data as files.  As the db owner, execute the grant.  Note that this privilege can only be global (applicable to all databases for the user), and not database specific.  
+```
+GRANT FILE ON *.* TO ppdev@localhost;
+```
+Second, the database is initially configured to restrict the ability to write files to any location.  You may see this error when trying to use the MySql OUTFILE command: _The MySQL server is running with the --secure-file-priv option so it cannot execute this statement_.    
+What is the secure file priv option, and where is it pointing:    
+```
+SHOW GLOBAL VARIABLES LIKE 'secure_file_priv';
+```
+If you have a value such as "/var/lib/mysql-files" then this is the only directory you can write to.  Yes, you can use this location (it is actually owned by the _mysql_ user and group), or you can change this setting to allow writing to any location.
+
+### Access MySql Output Files
+*1. Alter the secure files location:*
+Edit the _/etc/mysql/my.cnf_ config file and add the following to allow output to anywhere:  
+```
+[mysqld]
+secure_file_priv = ''
+```
+Because this is not a dynamic global parameter, restart MySql.  
+```
+sudo systemctl restart mysql
+```
+Finally, you wil most likely receive a permission denied error when trying to write OUTFILE to your chosen directory.  For example, my directory at _~/downloads/postcodes_.  To make files writable at this location we must a) "chmod a+rx" for every folder in the path prior to _postcodes_, and b) "chmod a+rwx" to the destination _postocdes_ folder.
+
+*2. Add the MySql Group to another User*
+This is the option I used.  There is no need to change the _secure_file_priv_ location.  However you must add the "mysql" group to your user so you can read and copy the resulting files, and then start a new shell for it to take effect:  
+```
+sudo usermod --append --group mysql avrob
+```
+
+### Write Postcode Files
+It is possible to make MySql produce file outputs, although how we are using this feature, is not how the designers intended.  
+
+To execute the MySql OUTFILE command poses some problems, as the file path cannot be a variable, but must be a string literal on the execution of the SQL statement.  To write one file per postcode of records:  
+1. Create a stored procedure that uses a Cursor to step through each Postcode on the _postcode_ table.  
+2. Use a stored procedure parameter to pass in the OS destination file path.  
+3. Use a MySql _Prepared Statement_ in order to force the OUTFILE string literal.  
+
+Alternatively, create a Python or other script to perform the same actions.  I believe this would be a more suitable solution, and perhaps this will be a future modification.  
 
 ### MySqls
 Some useful statements:  
